@@ -1,0 +1,475 @@
+---
+title: "FF extension"
+author: "Pedro H. B. Vallocci"
+date: '2023-03-09'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+#rmarkdown::render("rmd_test.Rmd", clean = FALSE)
+```
+
+## Data cleaning
+
+The Fama-French 12 industry classification is used for the industry `ind12` factor when applicable. The stock return data is at a monthly frequency.
+
+```{r cars, echo = FALSE}
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(stargazer)
+library(rsq)
+
+create_ind12 <- function(df){
+  df = df %>% add_column(ind12 = NA)
+  seq1 = c(seq(0100,0999),seq(2000,2399),seq(2700,2749),seq(2770,2799),seq(3100,3199),seq(3940,3989))
+  seq2 = c(seq(2500,2519),seq(2590,2599),seq(3630,3659),seq(3710,3711),seq(3714,3714),seq(3716,3716),seq(3750,3751),seq(3792,3792),seq(3900,3939),seq(3990-3999))
+  seq3 = c(seq(2520,2589),seq(2600,2699),seq(2750,2769),seq(3000,3099),seq(3200,3569),seq(3580,3629),seq(3700,3709),seq(3712,3713),seq(3715,3715),seq(3717,3749),seq(3752,3791),seq(3793,3799),seq(3830,3839),seq(3860,3899))
+  seq4 = c(seq(1200,1399), seq(2900,2999))
+  seq5 = c(seq(2800,2829), seq(2840,2899))
+  seq6 = c(seq(3570,3579),seq(3660,3692),seq(3694,3699),seq(3810,3829),seq(7370,7379))
+  seq7 = c(seq(4800,4899))
+  seq8 = c(seq(4900,4949))
+  seq9 = c(seq(5000,5999),seq(7200,7299),seq(7600,7699))
+  seq10 = c(seq(2830,2839),seq(3693,3693),seq(3840,3859),seq(8000,8099))
+  seq11 = seq(6000,6999)
+  
+  df$ind12[df$sic %in% seq1] = 1
+  df$ind12[df$sic %in% seq2] = 2
+  df$ind12[df$sic %in% seq3] = 3
+  df$ind12[df$sic %in% seq4] = 4
+  df$ind12[df$sic %in% seq5] = 5
+  df$ind12[df$sic %in% seq6] = 6
+  df$ind12[df$sic %in% seq7] = 7
+  df$ind12[df$sic %in% seq8] = 8
+  df$ind12[df$sic %in% seq9] = 9
+  df$ind12[df$sic %in% seq10] = 10
+  df$ind12[df$sic %in% seq11] = 11
+  df$ind12[is.na(df$ind12)] = 12
+  invisible(df)
+}
+
+
+cleanff <- function(ffdf){
+  outdf = ffdf %>%
+    rename(ym = X) %>%
+    mutate_at(vars(-ym), ~ log(1+./100))
+  invisible(outdf)
+}
+#NYSE codes:
+
+#11: NYSE
+#12: AMEX
+#14: NASDAQ
+
+
+
+```
+
+
+```{r}
+# library(dplyr)
+# library(ineq)
+# 
+# calculate_gini <- function(df) {
+#   # Select only the topic columns
+#   topics <- select(df, starts_with("topic_"))
+#   
+#   # Calculate the Gini index for each row
+#   gini_values <- apply(topics, 1, ineq)
+#   
+#   # Add the Gini index as a new column
+#   mutate(df, gini = gini_values)
+# }
+# 
+# result <- calculate_gini(topic_map)
+```
+
+
+Intangible capital data is extracted from Peters & Taylor. Topic mapping is performed using 2022 10-Ks, with only one topic attributed to each firm. The risk-free rate is obtained from the Fed Funds 1-month rate.
+
+
+```{r}
+# Loading data
+peterstaylor <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/peterstaylor.csv")
+linkt_orig <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/CRSP-Compustat Merged Database - Linking Table.csv")
+ff3f_orig <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/ff3f.csv")
+ff5f_orig <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/ff5f.csv")
+cequity_mapper <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/cequity_mapper.csv")
+load("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/comp_funda2.Rdata")
+load("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/stoxmo_post2010short.Rdata")
+ff1mo_orig <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/ffr_1mo.csv")
+
+## LOADING TOPIC MAPS
+topic_map_4m <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/dic2022mc5thr10_default_flt_4t/topic_map_2013_2022.csv")
+topic_map_6m <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/dic2022mc5thr10_default_flt_6t/topic_map_2013_2022.csv")
+
+topic_map_6m <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/dic2022mc5thr10_default_flt_6t/topic_map_2013_2022.csv")
+
+topic_map_6m <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/dic2022mc5thr10_default_flt_6t/topic_map_2013_2022.csv")
+
+dic2022mc5thr0_5_npmi_flt_4t <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/dic2022mc5thr0_5_npmi_flt_4t/topic_map_2013_2022.csv")
+
+dic2022mc5thr0_5_npmi_flt_6t <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/dic2022mc5thr0_5_npmi_flt_6t/topic_map_2013_2022.csv")
+
+KPSS_2020_public <- read.csv("/Volumes/Pedro/Replications/Kogan, Papanikolaou, Seru, Stoffman - Technological innovation/KPSS_2020_public.csv")
+```
+
+
+## Data cleaning:
+
+```{r}
+patent_ik = KPSS_2020_public %>%
+  mutate(fyear = as.numeric(substr(filing_date,7,10)) ) %>%
+  group_by(permno, fyear) %>%
+  summarize(xi_total = sum(xi_real)) %>%
+  rename(LPERMNO = permno)  %>%
+  mutate(xi_total = coalesce(xi_total, 0))
+
+topic_map_orig = dic2022mc5thr0_5_npmi_flt_4t
+topic_k = "topic_3" 
+# n = 4
+# if(n==4){
+#   topic_map_orig = topic_map_4m
+#   k = 1
+# } else if(n == 6){
+#   topic_map_orig = topic_map_6m
+#   k = 0
+# } else { stop("Wrong n")}
+
+ff3f <- cleanff(ff3f_orig)
+ff5f <- cleanff(ff5f_orig)
+
+# CLEANING LINKT
+linkt = linkt_orig %>%
+  group_by(gvkey) %>%
+  fill(LPERMNO, .direction = "downup") %>%
+  ungroup() %>%
+  mutate(CUSIP8 = substr(cusip, 1, 8)) %>%
+  select(CUSIP8, LPERMNO, sic, cik, gvkey, conm) %>%
+  group_modify(~create_ind12(.x)) %>%
+  distinct()
+
+### LOADING TOPICS FROM LDA
+#topic_map_orig = topic_map_4m
+library(dplyr)
+topic_map = topic_map_orig %>%
+  mutate(topic_kk = !!sym(topic_k)) %>%
+  inner_join(linkt, by = c("CIK" = "cik")) %>% 
+  left_join(patent_ik, by = c("LPERMNO")) %>%
+  mutate(logxitotal = log(1+xi_total)) %>%
+  filter(logxitotal > 0) %>%
+  group_by(gvkey, CUSIP8, year, conm) %>%
+  summarize(across(starts_with("topic_"), mean), across(starts_with("max_topic"), mean)) %>%
+
+  ungroup()
+```
+
+The daily log-returns are converted to monthly by summing them. Excess return is then computed by taking the difference between the monthly return and the risk-free rate. The SP500 return is obtained using a proxy stock with CUSIP 78462F10. The beta for each stock is calculated using the formula $\beta = \frac{Var(ER_i)}{Cov(ER_i, ER_m)}$, where NAs are discarded. All relevant data, including industry information, is included in the dataframe `df_full`.
+
+```{r}
+#### CONVERT DAILY RETURNS TO MONTHLY RETURNS
+minyear = min(topic_map$year)
+
+stox = stoxmo_post2010short %>%
+  mutate(RET = as.numeric(RET)) %>%
+  mutate(retm = log(1+RET))%>%
+  mutate(ym = date %/% 100)  %>%
+  mutate(y = ym %/% 100) %>%
+  filter(y >= minyear) %>%
+  left_join(ff3f, by = "ym") %>%
+  mutate(eretm = retm - RF) %>%
+  drop_na(RET)
+  
+#### CREATE BETAS
+
+stox_betas = stox %>%
+  group_by(CUSIP, y) %>%
+  summarize(beta = var(eretm, use = "pairwise.complete.obs")/cov(eretm, Mkt.RF, use = "pairwise.complete.obs"))
+  
+stox_full = stox %>%
+  inner_join(stox_betas, by = c("CUSIP", "y")) %>%
+  left_join(topic_map, by = c("CUSIP" = "CUSIP8", "y" = "year")) %>%
+  left_join(cequity_mapper, by = c("CUSIP" = "cusip8", "y" = "year")) %>%
+  filter(crit_ALL == 1) %>%
+  rename(CUSIP8 = CUSIP) %>%
+  mutate(max_topic = ifelse(is.na(max_topic), 999, max_topic)) 
+
+ndim_mb = 5
+ndim_me = 5
+ndim_ik = 3
+ndim_kkc = 2
+```
+
+The following calculations and categorizations are made:
+
+- Market-to-book ratios (`mb`) are found using the formula: `mb = (csho * prcc_f) / ceq`, where `csho` represents common shares outstanding, `prcc_f` represents the closing price of the stock, and `ceq` represents common equity.
+- Market equity is calculated as the product of `csho` and `prcc_f`.
+- Stocks are divided into `r ndim_mb` groups based on their market-to-book ratio.
+- Stocks are also divided into `r ndim_me` groups based on their market equity.
+- Stocks are categorized into `r ndim_kkc` groups based on their membership in the knowledge-capital-heavy cluster.
+
+```{r}
+comp_fundaexp = comp_funda2%>%
+  mutate(gvkey = as.integer(GVKEY)) %>%
+  left_join(peterstaylor, by = c("fyear", "gvkey"))  %>%
+  mutate(K_int_Know = coalesce(K_int_Know, 0)) 
+
+compustat_sel = comp_fundaexp %>% #filter(ceq > 0) %>%
+  select(prcc_f, prcc_c, ppegt, csho, ceq, cusip, fyear, exchg, K_int_Know, K_int) %>%
+  mutate(mb = (csho*prcc_f)/ceq, 
+         me = csho*prcc_f,
+         CUSIP8 = str_sub(cusip, 1, -2)) %>%
+  select(-cusip) %>%
+  rename(y = fyear) %>%
+  mutate(kk_share = K_int_Know/ppegt) %>%
+  inner_join(stox_full, by = c("y", "CUSIP8")) %>%
+  group_by(y) %>%
+  drop_na(me, mb) %>%
+  mutate(med_kk_share = median(kk_share[kk_share != 0], na.rm = TRUE),
+         kk_level = case_when(kk_share == 0 ~ 0,
+                              kk_share < med_kk_share ~ 1,
+                              TRUE ~ 2)) %>%
+  mutate(med_NYSE_me = median(me[exchg == 11], na.rm = TRUE)) %>%
+  mutate(med_NYSE_mb70p = quantile(mb[exchg == 11], prob = 0.7, na.rm = TRUE)) %>%
+  mutate(med_NYSE_mb30p = quantile(mb[exchg == 11], prob = 0.3, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(meg = ifelse(me < med_NYSE_me, 1, 2),
+         mbg = case_when(mb < med_NYSE_mb30p ~ 1,
+                              mb >= med_NYSE_mb30p & mb <= med_NYSE_mb70p ~ 2,
+                              mb > med_NYSE_mb70p ~ 3)) %>%
+  mutate(pf6_name = 10*meg+mbg)%>%
+  group_by(y) %>%
+  mutate(mb_5tile = ntile(mb, 5), me_5tile = ntile(me, 5)) %>%
+  ungroup() %>%
+  mutate(pf25_name = 10*me_5tile + mb_5tile) %>%
+  group_by(ym) %>%
+  mutate(kk_bin = cut(topic_kk, breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1), labels = c(1, 2, 3, 4, 5), include.lowest = TRUE)) %>%
+  mutate(kk_bin = ifelse(is.na(kk_bin), -999, kk_bin)) %>%
+  ungroup()
+```
+
+- Returns for each portfolio, which are divided into two dimensions, are calculated as the asset-weighted sum of returns using `ff3_ret`.
+- Returns for each portfolio, which are divided into three dimensions, are calculated as the asset-weighted sum of returns using `ff3_wKKc_ret`.
+- SMB (Small Minus Big) is the difference between the simple average of the returns on the three small stock portfolios and the average of the three big stock portfolios.
+- HML (High Minus Low) is the difference between the simple average of the returns on the two low market-to-book (MB) portfolios (high book-to-market ratio) and the two high MB portfolios (low book-to-market ratio).
+
+```{r}
+## FIND RETURNS FOR 2F PORTFOLIO: MB, ME
+
+ff3_ret = compustat_sel %>%
+  group_by(ym, pf25_name) %>%
+  summarize(ret = sum(eretm*me, na.rm = TRUE)/sum(me, na.rm = TRUE), Mkt.RF = mean(Mkt.RF), SMB = mean(SMB), HML = mean(HML), RF = mean(RF))
+
+# ff3_hml = ff3_ret %>%
+#   group_by(ym, mb_ntile) %>% # Mean of all MB portfolios?
+#   summarize(ret = mean(ret)) %>%
+#   pivot_wider(names_from = mb_ntile, names_prefix = "mb", values_from = ret) %>%
+#   transmute(ym, hml = mb1-mb5)
+# 
+# ff3_smb = ff3_ret %>%
+#   group_by(ym, me_ntile) %>%
+#   summarize(ret = mean(ret)) %>%
+#   pivot_wider(names_from = me_ntile, names_prefix = "me", values_from = ret) %>%
+#   transmute(ym, smb = me1-me5) 
+
+# Why am I redoing this? Because instead of averaging out returns of several portfolios with the same KK, I am averaging out returns for all stocks with same KK.
+ff3_kkhml = compustat_sel %>%
+  drop_na(topic_kk) %>%
+  ungroup() %>%
+  group_by(ym, kk_bin) %>%
+  summarize(ret = sum(eretm*me, na.rm = TRUE)/sum(me, na.rm = TRUE)) %>%
+  pivot_wider(names_from = kk_bin, names_prefix = "kk", values_from = ret) %>%
+  transmute(ym, kkhml = kk5-kk1)
+
+```
+
+## Cross-Sectional Regression
+
+```{r}
+library(broom)
+
+eret_mo = ff3_ret %>%
+  inner_join(ff3_kkhml, by = c("ym")) %>%
+  rename(eretm = ret)  %>%
+  drop_na() %>%
+  ungroup()
+
+formula3ff <- eretm ~ kkhml + HML + SMB + Mkt.RF
+
+first_stage1 = eret_mo %>%
+  ungroup() %>%
+  nest_by(pf25_name) %>%
+  mutate(mod = list(lm(formula3ff <- eretm ~ kkhml + HML + SMB + Mkt.RF, data = data))) %>%
+  summarize(eretm = mean(data$eretm), t = length(data$eretm), tidy(mod)) 
+
+get_sigmae = first_stage1 %>%
+  mutate(sigmae = t*std.error^2) %>%
+  filter(term == "(Intercept)") %>%
+  select(pf25_name, sigmae) %>%
+  drop_na()
+
+
+first_stage2 = first_stage1 %>%
+  select(-std.error, -statistic, -p.value) %>%
+  pivot_wider(names_from = term, values_from = estimate) %>%
+  full_join(get_sigmae, by = c("pf25_name")) %>%
+  drop_na()
+
+#corr = mean((first_stage$`(Intercept)`)^2)*mean(first_stage$t)
+
+second_stage_ols = lm(formula3ff <- eretm ~ kkhml + HML + SMB + Mkt.RF, data = first_stage2)
+
+library(nlme)
+second_stage_wls = lm(formula3ff, data = first_stage2, weights = first_stage2$sigmae)
+summary(second_stage_ols)
+summary(second_stage_wls)
+```
+
+## Second stage regressions
+
+Considering knowledge capital risk a non-traded factor, I run the regression in two stages. In the first one, I obtain estimates of betas from the time-series regression:
+
+$$
+\bar{ER}_t = a + \beta_{SMB, t} SMB_t + \beta_{HML, t} HML_t + \beta_{KKHML, t} KKHML_T + \beta_{ERM, t} (RM_t - RF_t) +\varepsilon_t
+$$
+
+In the second stage, I obtain a cross-sectional regression of average returns on betas. The betas here are the explanatory variables. Since the regression residuals are cross-sectionally correlated, I also run WLS, using as weights the variance of residuals for each portfolio. 
+
+$$
+\bar{R}_t + \widehat{B} \lambda + \alpha
+$$
+
+```{r}
+summary(second_stage_ols)
+summary(second_stage_wls)
+```
+
+
+## First regressions
+
+Stocks were grouped monthly into 12 portfolios based on three dimensions: book-to-market ratio (L, M, H), market value (S, B), and knowledge risk intensity (H, L). Book-to-market was divided into terciles (L, M, H), while market value was divided using the median (S, B). High knowledge risk intensity was determined based on cluster 1 in an LDA analysis, with other firms categorized as 0.
+
+$$
+R_{i,t} - R_{f,t} = \beta_{1,i} HML_{t} + \beta_{2,i} SMB_{t} + \beta_{3,i} KKHML_{t} + \epsilon_{i,t}
+$$
+
+Each of the tables below include coefficients for 12 stock portfolios formed on size (S/B), book-to-market equity (H/M/L), and KK loading (H/L).
+
+## Monthly returns by group
+
+The graph below illustrates the monthly returns of high- and low-knowledge firms, presented as the mean asset-weighted returns. Additionally, the subsequent graph displays the standard deviation of monthly returns for the respective groups, providing further insight into their performance. It is clear that high-knowledge firms have been more volatile throughout the times, with the notable exception of March 2020.
+
+```{r}
+library(lubridate)
+mo_ret_bygroup = compustat_sel %>%
+  mutate(ym = lubridate::ym(ym)) %>%
+  mutate(kk_bin = factor(kk_bin)) %>%
+  group_by(ym, kk_bin) %>%
+  summarize(eret = sum(eretm*me, na.rm = TRUE)/sum(me, na.rm = TRUE), sderet = sd(eretm, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(kk_bin) %>%
+  mutate(eret_accum = cumsum(eret))
+
+library(zoo)
+qt_ret_bygroup = mo_ret_bygroup %>%
+  group_by(kk_bin) %>%
+  mutate(eret3ma = rollmean(eret, k=3, fill=NA, align='right'))
+
+ggplot(mo_ret_bygroup, aes(x = ym, y = eret, col = kk_bin)) +
+  geom_line() +
+  labs(x = "Year-month", y = "Asset-weighted monthly returns")
+ggplot(qt_ret_bygroup, aes(x = ym, y = eret3ma, col = kk_bin)) + geom_line()  +
+  labs(x = "Year-month", y = "Asset-weighted Monthly returns, 3MA") 
+ggplot(mo_ret_bygroup, aes(x = ym, y = eret_accum, col = kk_bin)) +
+  geom_line() +
+  labs(x = "Year-month", y = "Asset-weighted accumulated monthly returns")
+ggplot(mo_ret_bygroup, aes(x = ym, y = sderet, col = kk_bin)) +
+  geom_line() +
+  labs(x = "Year-month", y = "(Non-asset-weighted) monthly standard deviation of returns")
+```
+
+
+
+```{r}
+library(lubridate)
+mo_ret_bygroup = compustat_sel %>%
+  mutate(ym = lubridate::ym(ym)) %>%
+  mutate(max_topic = factor(max_topic)) %>%
+  group_by(ym, max_topic) %>%
+  summarize(eret = sum(eretm*me, na.rm = TRUE)/sum(me, na.rm = TRUE), sderet = sd(eretm, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(max_topic) %>%
+  mutate(eret_accum = cumsum(eret))
+
+library(zoo)
+qt_ret_bygroup = mo_ret_bygroup %>%
+  group_by(max_topic) %>%
+  mutate(eret3ma = rollmean(eret, k=3, fill=NA, align='right'))
+
+ggplot(mo_ret_bygroup, aes(x = ym, y = eret, col = max_topic)) +
+  geom_line() +
+  labs(x = "Year-month", y = "Asset-weighted monthly returns")
+ggplot(qt_ret_bygroup, aes(x = ym, y = eret3ma, col = max_topic)) + geom_line()  +
+  labs(x = "Year-month", y = "Asset-weighted Monthly returns, 3MA") 
+ggplot(mo_ret_bygroup, aes(x = ym, y = eret_accum, col = max_topic)) +
+  geom_line() +
+  labs(x = "Year-month", y = "Asset-weighted accumulated monthly returns")
+ggplot(mo_ret_bygroup, aes(x = ym, y = sderet, col = max_topic)) +
+  geom_line() +
+  labs(x = "Year-month", y = "(Non-asset-weighted) monthly standard deviation of returns")
+```
+
+<!-- ## Part II: With regressors HML, SMB, KKHML, excess market return -->
+
+<!-- $$ -->
+<!-- R_{i,t} - R_{f,t} = \beta_{1,i} HML_{t} + \beta_{2,i} SMB_{t} + \beta_{3,i} KKHML_{t} +  -->
+<!-- \beta_{4,i} (RM_{t} - R_{f,t}) + \epsilon_{i,t} -->
+<!-- $$ -->
+
+<!-- Each of the tables below include coefficients for 12 stock portfolios formed on size (S/B), book-to-market equity (H/M/L), and KK loading (H/L). -->
+
+<!-- ```{r} -->
+<!-- hml = c() -->
+<!-- mer = c() -->
+<!-- mer_p = c() -->
+<!-- smb = c() -->
+<!-- kkhml = c() -->
+<!-- hml_p = c() -->
+<!-- smb_p = c() -->
+<!-- kkhml_p = c() -->
+<!-- rsqv = c() -->
+<!-- rsq_dif = c() -->
+<!-- pf_vector = c() -->
+<!-- for (i in 1:ndim_mb){ -->
+<!--   for (j in 1:ndim_me){ -->
+<!--     for (k in 1:ndim_kkc){ -->
+<!--           ijk = as.character(i*100 + j*10+k) -->
+<!--           filtered_data = eret_mo %>% filter(pf25_name == ijk) -->
+<!--           if(nrow(filtered_data)==0){ -->
+<!--             hml = append(hml, NA) -->
+<!--             smb = append(smb, NA) -->
+<!--             kkhml = append(kkhml, NA) -->
+<!--             hml_p = append(hml_p, NA) -->
+<!--             smb_p = append(smb_p, NA) -->
+<!--             kkhml_p = append(kkhml_p, NA) -->
+<!--             rsqv = append(rsqv, NA) -->
+<!--             rsq_dif = append(rsq_dif, NA) -->
+<!--             next -->
+<!--           } -->
+<!--           pf_vector = c(pf_vector, ijk) -->
+<!--           reg = lm(eretm ~ hml + smb + kkhml + eretsp500, filtered_data) -->
+<!--           reg_2ff = lm(eretm ~ hml + smb + eretsp500, filtered_data) -->
+<!--           hml = append(hml, coef(reg)["hml"]) -->
+<!--           smb = append(smb, coef(reg)["smb"]) -->
+<!--           kkhml = append(kkhml, coef(reg)["kkhml"]) -->
+<!--           hml_p = append(hml_p, coef(summary(reg))["hml",4]) -->
+<!--           smb_p = append(smb_p, coef(summary(reg))["smb",4]) -->
+<!--           kkhml_p = append(kkhml_p, coef(summary(reg))["kkhml",4]) -->
+<!--           rsqv = append(rsqv, rsq(reg)) -->
+<!--           rsq_dif = append(rsq_dif, rsq(reg)-rsq(reg_2ff)) -->
+<!--     } -->
+<!--   } -->
+<!-- } -->
+<!-- ``` -->
