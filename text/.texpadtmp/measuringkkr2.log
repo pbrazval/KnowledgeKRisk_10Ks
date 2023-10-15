@@ -1,0 +1,368 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.17)  18 JUN 2023 10:48
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**measuringkkr2.tex
+(./measuringkkr2.tex
+LaTeX2e <2022-11-01> patch level 1
+L3 programming layer <2023-02-22> (/usr/local/texlive/2023/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2023/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2022/07/02 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\c@figure=\count191
+\c@table=\count192
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/psnfss/helvet.sty
+Package: helvet 2020/03/25 PSNFSS-v9.3 (WaS) 
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)) (/usr/local/texlive/2023/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2022/12/04 v6.7b set line spacing
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen141
+\Gin@req@width=\dimen142
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/tools/dcolumn.sty
+Package: dcolumn 2014/10/28 v1.06 decimal alignment package (DPC)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/tools/array.sty
+Package: array 2022/09/04 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen143
+\ar@mcellbox=\box51
+\extrarowheight=\dimen144
+\NC@list=\toks17
+\extratabsurround=\skip50
+\backup@length=\skip51
+\ar@cellbox=\box52
+)) (/usr/local/texlive/2023/texmf-dist/tex/latex/placeins/placeins.sty
+Package: placeins 2005/04/18  v 2.2
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/natbib/natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip52
+\bibsep=\skip53
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count193
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2023/02/19 v1.6 Sub-captions (AR)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/03/12 v3.6j Customizing captions (AR)
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/03/12 v2.4 caption3 kernel (AR)
+\caption@tempdima=\dimen145
+\captionmargin=\dimen146
+\caption@leftmargin=\dimen147
+\caption@rightmargin=\dimen148
+\caption@width=\dimen149
+\caption@indent=\dimen150
+\caption@parindent=\dimen151
+\caption@hangindent=\dimen152
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count194
+\c@continuedfloat=\count195
+)
+Package caption Info: New subtype `subfigure' on input line 239.
+\c@subfigure=\count196
+Package caption Info: New subtype `subtable' on input line 239.
+\c@subtable=\count197
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count198
+\float@exts=\toks18
+\float@box=\box53
+\@float@everytoks=\toks19
+\@floatcapt=\box54
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (/usr/local/texlive/2023/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+ (/usr/local/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count199
+\Gm@cntv=\count266
+\c@Gm@tempcnt=\count267
+\Gm@bindingoffset=\dimen153
+\Gm@wd@mp=\dimen154
+\Gm@odd@mp=\dimen155
+\Gm@even@mp=\dimen156
+\Gm@layoutwidth=\dimen157
+\Gm@layoutheight=\dimen158
+\Gm@layouthoffset=\dimen159
+\Gm@layoutvoffset=\dimen160
+\Gm@dimlist=\toks20
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2023-01-16 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count268
+\l__pdf_internal_box=\box55
+) (/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/text/.texpadtmp/measuringkkr2.aux
+
+LaTeX Warning: Label `fig:bytech' multiply defined.
+
+
+LaTeX Warning: Label `' multiply defined.
+
+)
+\openout1 = `measuringkkr2.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+ (/usr/local/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count269
+\scratchdimen=\dimen161
+\scratchbox=\box56
+\nofMPsegments=\count270
+\nofMParguments=\count271
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count272
+\MPscratchDim=\dimen162
+\MPnumerator=\count273
+\makeMPintoPDFobject=\count274
+\everyMPtoPDFconversion=\toks22
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: End \AtBeginDocument code.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: letterpaper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 29.
+
+Package natbib Warning: Citation `Crouzet2021-ic' on page 1 undefined on input line 41.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 41.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 41.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 41.
+[1
+
+{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+<cdf_words.png, id=28, 462.528pt x 346.896pt>
+File: cdf_words.png Graphic file (type png)
+<use cdf_words.png>
+Package pdftex.def Info: cdf_words.png  used on input line 111.
+(pdftex.def)             Requested size: 211.38832pt x 158.54192pt.
+<cdf_words_zoom.png, id=30, 462.528pt x 346.896pt>
+File: cdf_words_zoom.png Graphic file (type png)
+<use cdf_words_zoom.png>
+Package pdftex.def Info: cdf_words_zoom.png  used on input line 118.
+(pdftex.def)             Requested size: 211.38832pt x 158.54192pt.
+ (./dicfullmc10thr10defnob5noa0_8_4t/file_counts.tex) [6 <./cdf_words.png> <./cdf_words_zoom.png>] [7]
+<dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png, id=41, 1202.4925pt x 705.63625pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png  used on input line 159.
+(pdftex.def)             Requested size: 375.80544pt x 220.52155pt.
+ (./dicfullmc10thr10defnob5noa0_8_4t/topic_map_sample.tex
+Overfull \hbox (42.986pt too wide) in paragraph at lines 4--21
+ [][] 
+ []
+
+) [8 <./dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png>] (./dicfullmc10thr10defnob5noa0_8_4t/tpcavg_tech.tex)
+<dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png, id=46, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png  used on input line 183.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+<dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg, id=47, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg  used on input line 194.
+(pdftex.def)             Requested size: 375.80544pt x 404.04001pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[9 <./dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png>]
+
+LaTeX Warning: Reference `fig:msdr' on page 10 undefined on input line 198.
+
+
+LaTeX Warning: Reference `fig:awamr' on page 10 undefined on input line 198.
+
+(./dicfullmc10thr10defnob5noa0_8_4t/summary_table.tex)
+<dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg, id=52, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg  used on input line 201.
+(pdftex.def)             Requested size: 375.80544pt x 404.04001pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg, id=53, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg  used on input line 203.
+(pdftex.def)             Requested size: 375.80544pt x 404.04001pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: Reference `tab:bytech' on page 10 undefined on input line 205.
+
+(./dicfullmc10thr10defnob5noa0_8_4t/tpcavg_tech.tex)
+<dicfullmc10thr10defnob5noa0_8_4t/heatmap.png, id=54, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/heatmap.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/heatmap.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/heatmap.png  used on input line 211.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png, id=55, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png  used on input line 221.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+(./dicfullmc10thr10defnob5noa0_8_4t/summary_table.tex) [10 <./dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg>] [11] [12] [13 <./dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg>] [14 <./dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg>] [15 <./dicfullmc10thr10defnob5noa0_8_4t/heatmap.png>] [16 <./dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png>]
+<dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg, id=81, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg  used on input line 233.
+(pdftex.def)             Requested size: 281.85587pt x 303.03477pt.
+<dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png, id=82, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png  used on input line 236.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+<dicfullmc10thr10defnob5noa0_8_4t/stackedplot_n.png, id=83, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_n.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/stackedplot_n.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_n.png  used on input line 238.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<dicfullmc10thr10defnob5noa0_8_4t/topicvsikpt_hm.png, id=84, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/topicvsikpt_hm.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/topicvsikpt_hm.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/topicvsikpt_hm.png  used on input line 240.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png, id=85, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png  used on input line 242.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+(/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/text/.texpadtmp/measuringkkr2.bbl [17
+
+ <./dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg> <./dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png>] [18 <./dicfullmc10thr10defnob5noa0_8_4t/stackedplot_n.png>] [19 <./dicfullmc10thr10defnob5noa0_8_4t/topicvsikpt_hm.png>]
+Underfull \hbox (badness 3108) in paragraph at lines 59--60
+[]\OT1/cmr/m/n/12 Eisfeldt, An-drea L, Ed-ward Kim, and Dim-itris Pa-paniko-laou (2020) ``In-tan-gi-ble
+ []
+
+[20 <./dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png>] [21])
+
+Package natbib Warning: There were undefined citations.
+
+[22] (/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/text/.texpadtmp/measuringkkr2.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 4299 strings out of 476025
+ 81179 string characters out of 5790017
+ 1873388 words of memory out of 5000000
+ 24703 multiletter control sequences out of 15000+600000
+ 519229 words of font info for 55 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 67i,16n,77p,869b,485s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on "/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/text/.texpadtmp/measuringkkr2.pdf" (22 pages, 1966000 bytes).
+PDF statistics:
+ 161 PDF objects out of 1000 (max. 8388607)
+ 88 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+

@@ -1,0 +1,65 @@
+This is BibTeX, Version 0.99d (TeX Live 2023)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: /Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.aux
+The style file: econ.bst
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: ../mylibrary2.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--there is no volume, number, and pages in Blei2003-ay
+Warning--there is no volume, number, and pages in Crouzet2022-ic
+Warning--empty note in Eisfeldt2018-iy
+Warning--there is no volume, number, and pages in Fernald2015-io
+Warning--there is no volume, number, and pages in Kogan2017-fx
+Warning--empty note in Li2014-zp
+Warning--empty note in McGrattan2001-kc
+Warning--empty journal in Mikolov2013-be
+Warning--there is no volume, number, and pages in Mikolov2013-be
+Warning--there is no volume, number, and pages in Peri2015-qt
+You've used 41 entries,
+            6826 wiz_defined-function locations,
+            1562 strings with 15791 characters,
+and the built_in function-call counts, 49660 in all, are:
+= -- 8297
+> -- 2138
+< -- 103
++ -- 688
+- -- 798
+* -- 2825
+:= -- 6699
+add.period$ -- 34
+call.type$ -- 41
+change.case$ -- 295
+chr.to.int$ -- 40
+cite$ -- 51
+duplicate$ -- 1195
+empty$ -- 2279
+format.name$ -- 672
+if$ -- 13198
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 0
+newline$ -- 136
+num.names$ -- 415
+pop$ -- 515
+preamble$ -- 1
+purify$ -- 292
+quote$ -- 0
+skip$ -- 3417
+stack$ -- 0
+substring$ -- 3486
+swap$ -- 195
+text.length$ -- 205
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 681
+warning$ -- 10
+while$ -- 350
+width$ -- 0
+write$ -- 603
+(There were 10 warnings)
