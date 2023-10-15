@@ -34,7 +34,7 @@
 % - Fin institutions are different in debt/assets and productivity measures. Not sure if I need to remove them or not. Maybe keep them and do a robustness test. 
 % - Michael: use the ground truth somewhere. 
 
-\newcommand{\tkk}{\texttt{topic\_kk }}
+\newcommand{\tkk}{$Topic_{kk}$ }
 
 \maketitle % Print the title, author, and date
 
@@ -42,15 +42,18 @@
 
 \section{Introduction}
 
-The transition towards a service- and knowledge-based economy has been accompanied by a sharp increase in intangible assets, most notably in research and development (R\&D) \citep{Corrado2009-kd}.
+The transition towards a service- and knowledge-based economy has been accompanied by a sharp increase in intangible assets (R\&D). Spending on intangible assets qualifies as an investment since it reduces current consumption to increase future consumption \citep{Corrado2009-kd, Corrado2009-hk}. Among the components of a firm's intangible capital are knowledge capital, brand capital, and organization capital are components of a firm's intangible capital.  In this context, \emph{brand capital} is defined as a firm's accumulated expenses in advertising \citep{Belo2019-iz}; \emph{organization capital}, as the set of an enterprise's unique systems and processes %, being positively correlated with the firm's managerial quality scores 
+\citep{Eisfeldt2013-ad, Bloom2007-gl}; and \emph{knowledge capital}, as a firm's accumulated investments in R\&D.
+%most notably in research and development
 
-Knowledge capital, defined as a firm's accumulated investments in R\&D, accounts for an increasing share of public firms' valuation \citep{Belo2019-iz}. Notably, this form of capital exhibits a distinct risk profile compared to tangible, physical capital. For instance, companies heavily reliant on knowledge capital are more susceptible to the loss of critical personnel and modifications in patent enforcement. 
+R\&D expenditures are considered as intermediate expenses that can spur growth in models with expanding varieties \citep{Romer1990-tw} and quality ladders \citep{Grossman1991-pz, Atkeson2019-wz}. On another note, accumulated R\&D expenses are considered as an integral part of firm's capital in supply-side models such as \cite{Belo2013-ys}, accounting for an increasing share of public firms' valuation. Along these lines, \cite{Hall2001-ni, McGrattan2001-kc, Vitorino2014-yd, Eisfeldt2020-ec, Li2014-zp} confirm that intangible capital matters for aggregate stock market valuations and, more specifically, firm-level valuations. \cite{Corrado2009-kd} estimated total intangible capital in 2003 to be 3.6 trillion, half of which as scientific and non-scientific R\&D capital. \cite{Crouzet2022-ic} found that the omission of knowledge capital and its associated rents can explain up to 2/3 of the investment gap (the difference between marginal $q$ and average $Q$) in R\&D intense sectors such as Healthcare and Chemicals.
+%Notably, this form of capital exhibits a distinct risk profile compared to tangible, physical capital. For instance, companies heavily reliant on knowledge capital are more susceptible to the loss of critical personnel and modifications in patent enforcement. 
 
-Knowledge capital, brand capital, and organization capital are components of a firm's intangible capital. Spending on intangible assets qualifies as an investment since it reduces current consumption to increase future consumption \citep{Corrado2009-kd, Corrado2009-hk}. In this context, \emph{brand capital} is defined as a firm's accumulated expenses in advertising \citep{Belo2019-iz}; \emph{organization capital} is defined as the set of unique systems and processes employed in an enterprise and positively correlated with the firm's managerial quality scores \citep{Eisfeldt2013-ad, Bloom2007-gl}. 
 
-  Moreover, endogenous growth models, such as models with expanding varieties \citep{Romer1990-tw}, and with quality ladders \citep{Grossman1991-pz, Atkeson2019-wz}, imply that research expenses can spur growth. Even though the two latter models consider R\&D as intermediate expenses, supply-side valuation models such as \cite{Belo2013-ys} argue that not only quasi-fixed physical capital and labor inputs but also knowledge and brand capital can determine a firm's market value. 
 
-Along these lines, \cite{Hall2001-ni, McGrattan2001-kc, Vitorino2014-yd, Eisfeldt2020-ec, Li2014-zp} confirm that intangible capital matters for aggregate stock market valuations and, more specifically, firm-level valuations. \cite{Corrado2009-kd} estimated total intangible capital in 2003 to be 3.6 trillion, half of which as scientific and non-scientific R\&D capital. \cite{Crouzet2022-ic} found that the omission of knowledge capital and its associated rents can explain up to 2/3 of the investment gap (the difference between marginal $q$ and average $Q$) in R\&D intense sectors such as Healthcare and Chemicals.
+%  Moreover, endogenous growth models, such as models with expanding varieties \citep{Romer1990-tw}, and with quality ladders \citep{Grossman1991-pz, Atkeson2019-wz}, imply that research expenses can spur growth. Even though the two latter models consider R\&D as intermediate expenses, supply-side valuation models such as \cite{Belo2013-ys} argue that not only quasi-fixed physical capital and labor inputs but also knowledge and brand capital can determine a firm's market value. 
+
+
 
 %However, equating the omission of intangible and knowledge capital to a mere mismeasurement of a firm's book value is misleading since intangible capital has unique characteristics and thus cannot be lumped together with physical capital. \cite{Autor2020-rw, Unger2019-ip} shed light on a "scale-biased technological change" in R\&D-heavy firms. Greater output scalability, the absence of geographical constraints for input sourcing or output distribution, and the greater importance of network effects lead to a "winner-takes-most" outcome in some industries (i.e., an uneven market power distribution) and a declining labor share, consistent with \cite{Barkai2020-gi}.
 %
@@ -58,21 +61,34 @@ Along these lines, \cite{Hall2001-ni, McGrattan2001-kc, Vitorino2014-yd, Eisfeld
 %
 %R\&D-intensive firms are also more likely to offshore profit shifting, i.e., to license their intellectual property rights to offshore subsidiaries in order to accrue derived profits at tax-havens. Compared to non-R\&D-intensive firms (e.g., construction), it is easier to decouple the physical location of intellectual property production from its point of sale. Offshore profit shifting has grown since the 2000s, which coincides with the beginning of the productivity growth slowdown \citep{Fernald2015-io}. Adjusting for offshore profit shifting adds 2.1 log percentage points to R\&D-heavy firms, which is ten times larger than for non-R\&D. Labor productivity in R\&D-intensive firms has also grown much faster than in non-R\&D firms \citep{Guvenen2021-yh}.
 
-The riskiness of intangible assets differs systematically from tangible ones \citep{Hansen2005-xe}. \cite{Eisfeldt2013-ad} points out that shareholders cannot entirely appropriate the cash flows from the key talent of the firm since the firm must always compensate key talent by its outside option. \cite{Eisfeldt2018-iy} shows that key talent partially owns the cash flow from intangible capital in the form of equity, finding that almost 40\% of compensation to high-skilled labor happens as equity-based pay. Finally, \cite{Ai2019-wd} predicts that collateralizable assets, which do not include some categories of intangibles, provide insurance against aggregate shocks in the economy and should earn a lower expected return.
+The riskiness of intangible assets differs systematically from tangible ones \citep{Hansen2005-xe}. \cite{Eisfeldt2013-ad} point out that shareholders cannot entirely appropriate the cash flows from the key talent of the firm since the firm must always compensate key talent by its outside option. \cite{Eisfeldt2018-iy} shows that key talent partially owns the cash flow from intangible capital in the form of equity, finding that almost 40\% of compensation to high-skilled labor happens as equity-based pay. Finally, \cite{Ai2019-wd} predicts that collateralizable assets, which do not include some categories of intangibles, provide insurance against aggregate shocks in the economy and should earn a lower expected return.
 
-Knowledge capital's risk characteristics set it apart from other capital forms. Firms spend on R\&D to increase their future profitability, which is not guaranteed. For example, research conducted by a pharmaceutical firm can lead to successful new drugs that lead to patent rents for several years or to no result at all. The riskiness of innovation firms, and the growing empirical dispersion of Tobin's q, also explains the relation between Tobin's q and aggregate investment has become tighter since the mid-1990s \citep{Andrei2019-bh}. The riskiness of a financially constrained firm increases with its R\&D intensity \citep{Li2011-ay}. Besides the uncertainty of research investments, a firm is also susceptible to writing off part of its knowledge capital, e.g., when it narrowly loses a patent race \citep{Peters2017-fl}.
+Knowledge capital's risk characteristics set it apart from other forms of intangible capital. Firms invest on research to increase their future earnings, but not all innovations come to fruition. For example, research conducted by a pharmaceutical firm can lead to successful new drugs that lead to patent rents for several years or to no result at all. The presence of innovation-driven jumps in cash flow is related to an increased empirical dispersion of Tobin's q, and also helps explain why the relation between Tobin's q and aggregate investment has become tighter since the mid-1990s \citep{Andrei2019-bh}. Besides the uncertainty of research investments, a firm is also susceptible to writing off part of its knowledge capital, e.g., when it narrowly loses a patent race \citep{Peters2017-fl}. Such competitive forces, as well as obsolescence, lead to R\&D capital depreciation. Depreciation rates vary over time and according to individual industry technological and competitive environments \citep{Li2020-xc}. Depreciation rates should vary among firms in the same industry as well, since firms' ability to actualize research into innovation is also expected to be random.
 
-Knowledge capital heavy firms are especially susceptible to loss of key talent. \cite{Eisfeldt2013-ad} find that firms are more likely to list "loss of key talent" as a risk factor in their 10-K reports when they have high organization capital. It makes sense that the same pattern is valid for knowledge capital heavy firms, which are highly dependent on specialized and scarce workforce.
 
-Firms vulnerable to loss of key talent are especially susceptible to immigration-related risks, e.g., the H-1B visa annual quota shortages. The H-1B visa, introduced with the Immigration and Nationality Act of 1990, established temporary renewable visas for college-educated specialty professional workers, most of whom work in STEM occupations. \cite{Peri2015-qt} shows that the growth in foreign-STEM workers may explain between 10 and 25\% of the aggregate productivity growth and 10\% of skill-bias growth between 1990 and 2010.
+
+Knowledge capital heavy firms also are especially vulnerable to loss of key talent. \cite{Eisfeldt2013-ad} find that firms are more likely to list ``loss of key talent" as a risk factor in their 10-K reports when they have high organization capital. It makes sense that the same pattern is valid for knowledge capital heavy firms, which are highly dependent on specialized and scarce workforce. 
+
+Moreover, the riskiness of a financially constrained firm increases with its R\&D intensity \citep{Li2011-ay}. Also, young, R\&D-intensive firms frequently face challenges in securing debt finance due to the unpredictable and fluctuating returns on R\&D, and the potential adverse selection and moral hazard in the R\&D financing market. Notably, fluctuations in the supply of equity finance were instrumental in shaping the R\&D surge of the 1990s \citep{Brown2009-zp}, pointing to a shared risk factor among these firms.
+
+%Firms vulnerable to loss of key talent are especially susceptible to immigration-related risks, e.g., the H-1B visa annual quota shortages. The H-1B visa, introduced with the Immigration and Nationality Act of 1990, established temporary renewable visas for college-educated specialty professional workers, most of whom work in STEM occupations. \cite{Peri2015-qt} shows that the growth in foreign-STEM workers may explain between 10 and 25\% of the aggregate productivity growth and 10\% of skill-bias growth between 1990 and 2010.
 
 %Following previous literature on time-varying disaster risks, such as \cite{Gabaix2012-kw, Barro2006-pt, Rietz1988-ds, Gourio2012-nt} shows that increases in the risk of an economic disaster can lead to an increase in risk premia and a decrease in unemployment and output. My work will develop upon \cite{Gourio2012-nt} to consider a knowledge capital heavy economy, and investigate if agents are pricing in the risk of sudden drops in the efficiency of knowledge investment (e.g., due to shortage of skilled workforce) or sudden firm-specific write-offs ("disasters") of knowledge capital (e.g., due to weakening in patent laws).
 
-The current methods of identifying knowledge-heavy firms have proven to be insufficient due to a number of key issues. Firstly, there is a lack of consistency in the standards for R\&D reporting across industries and firms. This discrepancy is further compounded by the fact that some firms do not disclose their R\&D expenditure in their annual reports, making it challenging to accurately determine their level of knowledge intensity.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Why not sufficient
+% R&D
+The current methods of identifying knowledge-heavy firms have proven to be insufficient due to a number of key issues. Firstly, there is a lack of consistency in the standards for R\&D reporting across industries and firms. This discrepancy is further compounded by the fact that some firms do not disclose their R\&D expenditure in their annual reports, making it challenging to accurately determine their level of knowledge intensity.  Therefore, the mere magnitude of accumulated R\&D may not be the optimal metric for the volatility that a firm's cash flow is subject to.
 
+%SG&A
 Secondly, the measures used to identify intangible assets, typically through indirect measures like Selling, General and Administrative expenses (SG\&A), include components that are not related to knowledge, such as organizational capital. This can blur the distinction between knowledge-heavy and non-knowledge-heavy firms.
 
+%Patents
 Lastly, relying on patents as a measure of a firm's knowledge intensity only tells part of the story. While patents reflect the final outcomes of R\&D investments, they do not account for the internal learning processes that take place within firms, thus potentially undervaluing those that invest heavily in internal knowledge development, even if they do not have a high patent output.
+
+Additionally, measures of patent activity, such as the one in \cite{Kogan2017-fx}, are not flawless indicators of the risks associated with R\&D-centric firms. Large firms and firms in specific industries are more prone to protecting their intellectual property, which shows that patent distribution does not directly mirror the exposure to knowledge capital risks \citep{mezzanotti2023innovation}.
+
+Moreover, \citet{Kogan2017-fx} demonstrate that the companies' market value  surges within the following three days of the filing of potentially lucrative patents, that is, patents that have the potential to amplify a firm's revenue streams while simultaneously stifling competition. Yet, one must ponder whether the stock market, outside patent-filing moments, also internalizes the inherent risks of devoting a significant part of investments to a risky innovation process.
 
 Considering these shortcomings, several research questions emerge: Firstly, is it possible to better identify knowledge-heavy firms by performing text analysis on the risk factors reported in their annual reports? By analyzing the language and terminology used, can we glean more information about the firm's knowledge intensity?
 
@@ -84,25 +100,6 @@ This study seeks to identify firms that are vulnerable to knowledge capital-rela
 
 \section{Methodology and Data}
 
-Investing in innovation and learning inherently poses risks for firms. The uncertain outcomes of R\&D investments can either yield significant breakthroughs or not, as manifested by the jumps in cash flow delineated by \citet{Andrei2019-bh}. As a result, firms with greater cumulative R\&D investments, named as ``knowledge capital" in \cite{Belo2019-iz}, tend to exhibit more volatile valuations. Nonetheless, the mere magnitude of accumulated R\&D may not be the optimal metric for assessing knowledge capital risk and, in turn, the variations in cash flow. This raises the pivotal question: how should we best quantify the risk to which high knowledge capital firms are exposed?
-
-Moreover, \citet{Kogan2017-fx} demonstrate that the companies' market value  surges within the following three days of the filing of potentially lucrative patents, that is, patents that have the potential to amplify a firm's revenue streams while simultaneously stifling competition. Yet, one must ponder whether the stock market, outside patent-filing moments, also internalizes the inherent risks of devoting a significant part of investments to a risky innovation process.
-
-Firms in the innovation sector often share commonalities in their financing strategies. Young, R\&D-intensive firms frequently face challenges in securing debt finance due to the unpredictable and fluctuating returns on R\&D, and the potential adverse selection and moral hazard in the R\&D financing market. Notably, fluctuations in the supply of equity finance were instrumental in shaping the R\&D surge of the 1990s \citep{Brown2009-zp}, pointing to a shared risk factor among these firms.
-
-Additionally, measures of patent activity, such as the one in \cite{Kogan2017-fx}, are not flawless indicators of the risks associated with R\&D-centric firms. Large firms and firms in specific industries are more prone to protecting their intellectual property, which shows that patent distribution does not directly mirror the exposure to knowledge capital risks \citep{mezzanotti2023innovation}.
-
-The overarching aim of this paper is to unearth the shared risks intrinsic to the innovation lifecycle. In doing so, we endeavor to move beyond the conventional proxies of R\&D and patents, acknowledging their inherent limitations in capturing this multifaceted risk.
-
-%Investments in innovation and learning are per se a risky process for the firm, since R\&D investments can lead to breakthroughs or not (represented as jumps in the cash flow in \cite{Andrei2019-bh})). Consequently, firms with higher accumulated investments in R\&D have more volatile valuations. However, it is not clear that the sheer levels of accumulated R\&D is the best measure for knowledge capital risk and therefore cash flow variations, since ... . What is the best way to quantify the risk that high knowledge capital firms are subject to? 
-%
-%On another note, \cite{Kogan2017-fx} show that the stock market rewards innovation, providing stock market jumps when patents are filed that can potentially be successful in increasing rents for the firm and restricting competition. However, does the market price in the risk of being in the innvovation businsess too? 
-%
-%Firms in the innovation business cna also have incommon their financing method, as stock markets are a common financing method for R\&D, specially for young firms. Young R\&D-heavy firms receive little debt finance because the returns of R\&D are uncertain and volatile, and adverse selection and moral hazard problems are prevalent when financing young R\&D firms. Shifts in the supply of equity finance drove much of the R\&D boom in the 1990s \cite{Brown2009-zp}, and could again sour the market specifically for firms, which could again point to a common risk factor to these firms.
-%
-%Patent measures are not the perfect proxies for the risk factors involving R\&D firms, since its distribution does not necessarily coincide with the distribuition of R\&D risks. Large firms, and firms in certain industries, tend to value and utilize intellectual property methdos much more than smaller firms \citep{mezzanotti2023innovation}. 
-%
-%This paper aims to identify common risks inherent to the innovation process, without resorting purely to R\&D or patent proxies, which are as mentioned earlier too imperfect measures for this risk.
 
 \subsection{Latent Dirichlet Allocation (LDA)}
 
@@ -110,7 +107,7 @@ In this study, I use Latent Dirichlet Allocation (LDA), a topic modeling techniq
 
 
 
-Latent Dirichlet Allocation (LDA) is a generative statistical model that is widely employed for topic modelling within the field of natural language processing (NLP). Its effectiveness hinges on the fundamental assumption that each document in a given corpus can be seen as a mixture of a certain number of latent topics, denoted as $k \in {1, ..., K}$, each of which carries a particular weight, $\omega_{i1}, ..., \omega_{iK}$. Each of these topics is assigned a word probability vector, $\mathbf{\theta}_k$, defining the likelihood of each word appearing under this topic \cite{Blei2003-ay}.
+Latent Dirichlet Allocation (LDA) is a generative statistical model that is widely employed for topic modelling within the field of natural language processing (NLP). Its effectiveness hinges on the assumption that each document in a given corpus can be seen as a mixture of a certain number of latent topics, denoted as $k \in {1, ..., K}$, each of which carries a particular weight, $\omega_{i1}, ..., \omega_{iK}$. Each of these topics is assigned a word probability vector, $\mathbf{\theta}_k$, defining the likelihood of each word appearing under this topic \citep{Blei2003-ay}.
 
 Under this model, if we denote $X_i$ as the vector of word counts with length $n_i$ in the $i$th document, the word distribution in a document is modeled as a multinomial distribution. The probability of $X_i$ can be written as:
 
@@ -118,7 +115,7 @@ Under this model, if we denote $X_i$ as the vector of word counts with length $n
 X_i \sim Multinomial\left(n_i, \omega_{i 1} \theta_1+\cdots+\omega_{i K} \theta_K\right)
 \end{equation}
 
-This equation represents the fact that the observed words in the document are generated by a mixture of topics, with each topic contributing to the document with a certain weight.
+%This equation represents the fact that the observed words in the document are generated by a mixture of topics, with each topic contributing to the document with a certain weight.
 
 The output of an LDA operation is twofold: firstly, it generates a list of topics, with each topic represented as a collection of words. Secondly, it offers a weight distribution across these topics for each document, indicating the degree to which each topic is present in a given document.
 
@@ -134,28 +131,20 @@ Item 1A of a 10-K (``Risk Factors") includes information about the most signific
 
 Following \cite{Golubov2019-ku, Stambaugh2016-eb}, I filter firms by considering only ordinary common shares, traded on NYSE, AMEX, and NASDAQ exchanges; and following \cite{Stambaugh2016-eb} I exclude those whose prices are less than \$5 in 2016 dollars. 
 
-Reporting risk factors is mandatory for most firms; however, there are exceptions for asset-backed issuers and smaller reporting companies. Asset-backed issuers are defined as issuers whose reporting obligation arises from either the registration of an offering of asset-backed securities under the Securities Act or the registration of a class of asset-backed securities. Firms that are not required to disclose risk factors either leave Item 1A empty or write a placeholder text specifying that, due to their nature, they are not required to disclose risk factors. Consequently, there is an abnormal frequency of 10-K filings with a significantly low number of words, as depicted in Figure \ref{fig:cdf}. In subsequent stages, 1A texts with an insufficient word count are discarded. The threshold adopted was 200 words. 
+Reporting risk factors is mandatory for most firms; however, there are exceptions for asset-backed issuers and smaller reporting companies. Asset-backed issuers are defined as issuers whose reporting obligation arises from either the registration of an offering of asset-backed securities under the Securities Act or the registration of a class of asset-backed securities. Firms that are not required to disclose risk factors either leave Item 1A empty or write a placeholder text specifying that, due to their nature, they are not required to disclose risk factors. Consequently, there is an abnormal frequency of 10-K filings with a significantly low number of words, as depicted in Figure \ref{fig:cdf}. In subsequent stages, 1A texts with an insufficient word count are discarded. The threshold adopted was 200 words. The total count of filtered firms by year is shown in Table \ref{tab:file_counts}.
 
-The total count of filtered firms by year is shown in Table \ref{tab:file_counts}.
+After that, I proceed to 
+
+
 % TODO Need to change: use min10kwords = 200
 
 
 \input{\ffo/file_counts.tex} 
 
-\subsection{Text conversion to bag-of-words}
 
-After filtering the firms, I employ the \texttt{spacy} Python library to conduct lemmatization on all the refined texts. Lemmatization transforms words into their base form, ensuring consistent semantics. As an illustration, words such as ``take'', ``took'', and ``taken'' are standardized to ``take''. Notably, \texttt{spacy} integrates with WordNet---a comprehensive English lexical database curated by Princeton University.
-
-To extract significant collocations---like ``patent application''---which provide richer semantic insights than individual words, this research adopts the collocation detection method outlined in \cite{Mikolov2013-be}. This methodology yields pertinent bigrams and trigrams. A minimum occurrence threshold of 5 ensures that only the most statistically relevant combinations are incorporated into the dictionary.
-
-This research compiles the entirety of discovered words, bigrams, and trigrams to formulate a dictionary. 
-
-Lastly, the texts are transformed into a bag-of-words model using both the dictionary and the n-gram processed texts. In this representation, each word's frequency in a document, denoted as \(c_{ij}\), is preserved, but the sequence of words is omitted, leading to the final depiction of the corpus.
-
-
-%Through this approach, I have observed a positive correlation between higher intensities of a specific topic, hereafter referred to as "\texttt{topic\_kk}", and the aforementioned measures. This suggests that firms that more frequently discuss this topic may have higher levels of knowledge capital, accumulated patent value, and industry skill.
+%Through this approach, I have observed a positive correlation between higher intensities of a specific topic, hereafter referred to as "$Topic_{kk}$", and the aforementioned measures. This suggests that firms that more frequently discuss this topic may have higher levels of knowledge capital, accumulated patent value, and industry skill.
 %
-%Furthermore, I have found that firms in the upper quartile of "\texttt{topic\_kk}" intensity have consistently outperformed their peers in terms of returns since 2006. This finding indicates a potential link between the subject matter discussed in firms' annual reports and their financial performance.
+%Furthermore, I have found that firms in the upper quartile of "$Topic_{kk}$" intensity have consistently outperformed their peers in terms of returns since 2006. This finding indicates a potential link between the subject matter discussed in firms' annual reports and their financial performance.
 
 
 
@@ -167,7 +156,7 @@ Lastly, the texts are transformed into a bag-of-words model using both the dicti
 
 \subsection{Topic modeling}
 
-Upon having the corpus and the dictionary, I employ unsupervised topic modeling—specifically, the Latent Dirichlet Allocation (LDA) technique—to analyze the entire set of documents. These documents encapsulate risk factors associated with diverse firms spanning multiple years. During the model's configuration, I designate a parameter to specify the number of topics, represented as \(k\), and supply the model with the dictionary I previously crafted. Selecting an appropriate value for \(k\) is typically done \textit{ad hoc}, with the primary consideration being interpretability, as highlighted by Gentzkow (2019).
+Upon having the corpus and the dictionary, I employ LDA to endogenously generate topic loadings for the entire set of documents. These documents encapsulate risk factors associated with diverse firms spanning multiple years. During the model's configuration, I designate a parameter to specify the number of topics, represented as \(k\), and supply the model with the dictionary I previously crafted. Selecting an appropriate value for \(k\) is typically done \textit{ad hoc}, with the primary consideration being interpretability, as highlighted by Gentzkow (2019).
 
 A representative output from this modeling approach can be viewed in Figure \ref{fig:bubble_plot}.
 
@@ -193,15 +182,15 @@ After merging a four-topic map between firms and topic intensities to firms' ide
 
 \section{Results}
 
-\subsection{Defining \texttt{topic\_kk}}
+\subsection{Defining $Topic_{kk}$}
 
-For every topic map, I define \texttt{topic\_kk} as the topic that has the highest loading within high-tech sectors in the economy, defined as SIC codes 283, 357, 466, 367, 382, 384, 737 (\cite{Brown2009-zp}). Table \ref{tab:bytech} shows the average topic intensity for low- and high-tech firms for a four-topic model. 
+For every topic map, I define $Topic_{kk}$ as the topic that has the highest loading within high-tech sectors in the economy, defined as SIC codes 283, 357, 466, 367, 382, 384, 737 (\cite{Brown2009-zp}). Table \ref{tab:bytech} shows the average topic intensity for low- and high-tech firms for a four-topic model. 
 
 \input{\ffo/tpcavg_tech.tex}
 
 As depicted in Figure \ref{fig:mean_tiy}, the mean topic intensity per year demonstrates a steady rise in the usage of knowledge-capital related language in firms' risk factors since 2009. This upward trend underlines the increasing emphasis placed on knowledge capital within these organizations.
 
-Lastly, Figure \ref{fig:stackedplot_at} illustrates the accumulated assets of firms in the upper quartile of \texttt{topic\_kk}, which shows a clear prevalence of firms in the Business Equipment, Chemicals, and Other sectors.
+Lastly, Figure \ref{fig:stackedplot_at} illustrates the accumulated assets of firms in the upper quartile of $Topic_{kk}$, which shows a clear prevalence of firms in the Business Equipment, Chemicals, and Other sectors.
 
 \insertfigure{mean_tiy}{Mean annual topic intensity}{0.8}
 
@@ -217,39 +206,39 @@ In Belo et al.'s (2017) classification, an occupation is considered high-skill i
 
 \insertfigure{heatmap}{Correlation Matrix Showcasing the Relationship between Topic Intensity and Industry Employee Skill Level}{0.8}
 
-The second component of the analysis, shown in Figure \ref{fig:firmsbypat_hm}, computes the co-occurrences of quartiles for \texttt{topic\_kk} and the accumulated patent-related market value within firms, in alignment with the methodology proposed by \cite{Kogan2017-fx}. \cite{Kogan2017-fx} leveraged stock market data to estimate the value of individual patents filed by public corporations since 1926. 
+The second component of the analysis, shown in Figure \ref{fig:firmsbypat_hm}, computes the co-occurrences of quartiles for $Topic_{kk}$ and the accumulated patent-related market value within firms, in alignment with the methodology proposed by \cite{Kogan2017-fx}. \cite{Kogan2017-fx} leveraged stock market data to estimate the value of individual patents filed by public corporations since 1926. 
 
- Quartiles for \tkk are shown in Figure \ref{fig:topickk_distr}. In Figure \ref{fig:firmsbypat_hm}, the vertical axis signifies annually assigned quartiles of the ratio between Accumulated Patent Value and Total Assets. The results imply a clear correlation between elevated accumulated patent value and increased loadings of \texttt{topic\_kk}. A basic correlation analysis between average patent intensity and different topics is shown in Figure \ref{fig:heatmap_patents}.
+ Quartiles for \tkk are shown in Figure \ref{fig:topickk_distr}. In Figure \ref{fig:firmsbypat_hm}, the vertical axis signifies annually assigned quartiles of the ratio between Accumulated Patent Value and Total Assets. The results imply a clear correlation between elevated accumulated patent value and increased loadings of $Topic_{kk}$. A basic correlation analysis between average patent intensity and different topics is shown in Figure \ref{fig:heatmap_patents}.
 
 \insertfigure{firmsbypat_hm}{Quartiles of \tkk vs. quartiles of accumulated total patent market value}{0.7}
 
-\insertfigure{topickk_distr}{The histogram bars represent the frequency of \texttt{topic\_kk} values, while the red dashed lines indicate the quartile dividers. }{0.8} 
+\insertfigure{topickk_distr}{The histogram bars represent the frequency of $Topic_{kk}$ values, while the red dashed lines indicate the quartile dividers. }{0.8} 
 
 \insertfigure{heatmap_patents}{Correlation Matrix: Topic Intensities vs. Firms' Patent Intensities}{0.8}
 
-Figure \ref{fig:topicvskkpt_hm} demonstrates the correlation between \texttt{topic\_kk} and knowledge capital, as per the definition provided by Peters and Taylor (2017). Notably, it appears that higher accumulated investments in R\&D correspond to increased loadings of \texttt{topic\_kk}. 
+Figure \ref{fig:topicvskkpt_hm} demonstrates the correlation between $Topic_{kk}$ and knowledge capital, as per the definition provided by Peters and Taylor (2017). Notably, it appears that higher accumulated investments in R\&D correspond to increased loadings of $Topic_{kk}$. 
 
-\insertfigure{topicvskkpt_hm}{Correlation Between Knowledge Capital Quartiles and \texttt{topic\_kk} Quartiles: Higher R\&D Investments Correlate with Higher Loadings of \texttt{topic\_kk}}{0.8}
+\insertfigure{topicvskkpt_hm}{Correlation Between Knowledge Capital Quartiles and $Topic_{kk}$ Quartiles: Higher R\&D Investments Correlate with Higher Loadings of $Topic_{kk}$}{0.8}
 
-Lastly, Figure \ref{fig:stackedplot_at} illustrates the accumulated assets of firms in the upper quartile of \texttt{topic\_kk}.
+Lastly, Figure \ref{fig:stackedplot_at} illustrates the accumulated assets of firms in the upper quartile of $Topic_{kk}$.
 
-\insertfigure{stackedplot_at}{Accumulated Assets of Firms in the Upper Quartile of \texttt{topic\_kk}}{0.8}
+\insertfigure{stackedplot_at}{Accumulated Assets of Firms in the Upper Quartile of $Topic_{kk}$}{0.8}
 
 \subsection{Implications for Asset Pricing}
 
 In this section, firms are matched based on their Central Index Key (CIK) and Permanent Company Number (PERMNO), facilitating a link between their annual reports and multiple other data sources. These sources encompass daily stock data (aggregated on a weekly basis), Compustat data, and metrics associated with firms' knowledge capital, their cumulative patent value, and the skill level prevalent within their respective industries as delineated in prior literature.
 
-The investigation includes an analysis of value-weighted returns, partitioned according to diverse factors. Figure \ref{fig:awawr} illustrates value-weighted cumulative weekly returns, sorted by quartiles of \texttt{topic\_kk} determined on an annual basis. The data signifies a correlation between enhanced \texttt{topic\_kk} loadings and amplified weekly returns, a trend particularly prominent from 2011 onwards.
+The investigation includes an analysis of value-weighted returns, partitioned according to diverse factors. Figure \ref{fig:awawr} illustrates value-weighted cumulative weekly returns, sorted by quartiles of $Topic_{kk}$ determined on an annual basis. The data signifies a correlation between enhanced $Topic_{kk}$ loadings and amplified weekly returns, a trend particularly prominent from 2011 onwards.
 
-\insertfigure{awawr}{Value-weighted Accumulated Weekly Returns Segregated by Quartiles of \texttt{topic\_kk}, Showing a Positive Correlation Especially Post-2011}{0.8}
+\insertfigure{awawr}{Value-weighted Accumulated Weekly Returns Segregated by Quartiles of $Topic_{kk}$, Showing a Positive Correlation Especially Post-2011}{0.8}
 
-In Figure \ref{fig:awawr_aggind}, when constructing \texttt{topic\_kk} quartiles for each yearly-industry subset based on the 12-industry Fama-French classification, the resulting patterns become less interpretable.
+In Figure \ref{fig:awawr_aggind}, when constructing $Topic_{kk}$ quartiles for each yearly-industry subset based on the 12-industry Fama-French classification, the resulting patterns become less interpretable.
 
 \insertfigure{awawr_aggind}{Value-weighted Returns Grouped by Yearly-Industry Subset Quartiles, Indicating Less Interpretable Patterns}{0.8}
 
-Figure \ref{fig:awawr_byg} displays value-weighted accumulated weekly returns, grouped by firms' maximum topic. Notably, firms with the maximum loading on \texttt{topic\_kk} (topic 1) have outperformed their peers since 2008.
+Figure \ref{fig:awawr_byg} displays value-weighted accumulated weekly returns, grouped by firms' maximum topic. Notably, firms with the maximum loading on $Topic_{kk}$ (topic 1) have outperformed their peers since 2008.
 
-\insertfigure{awawr_byg}{Firms with Maximum Loading on \texttt{topic\_kk} Outperforming Peers Since 2008}{0.8}
+\insertfigure{awawr_byg}{Firms with Maximum Loading on $Topic_{kk}$ Outperforming Peers Since 2008}{0.8}
 
 Moving on to volatility patterns, Figure \ref{fig:wsdr_byg} presents the weekly standard deviation of returns within groups, categorized by the maximum topic. This analysis suggests that different topics are associated with varying cross-sectional volatility patterns.
 
@@ -259,9 +248,9 @@ Moving on to volatility patterns, Figure \ref{fig:wsdr_byg} presents the weekly 
 
 This study is ongoing, with numerous opportunities for enhancement and further exploration. For instance, the hyperparameter selection process could be optimized, potentially through cross-validation techniques. Existing benchmarks for the choice of 'k', such as perplexity, are also being considered for testing.
 
-In addition, the current methodology might evolve towards supervised models. For example, a prior for \texttt{topic\_kk} could be imposed, comprising specific words such as "patents" or "intellectual property." So far, the learning process has been completely unsupervised.
+In addition, the current methodology might evolve towards supervised models. For example, a prior for $Topic_{kk}$ could be imposed, comprising specific words such as "patents" or "intellectual property." So far, the learning process has been completely unsupervised.
 
-Another area of interest is testing whether the derived topics can serve as factors in asset pricing models or if they can clarify any anomalies. Moreover, it would be valuable to examine whether the language associated with \texttt{topic\_kk} has transformed over time. These areas of focus highlight the promising possibilities for further research and development in this study.
+Another area of interest is testing whether the derived topics can serve as factors in asset pricing models or if they can clarify any anomalies. Moreover, it would be valuable to examine whether the language associated with $Topic_{kk}$ has transformed over time. These areas of focus highlight the promising possibilities for further research and development in this study.
 
 %\insertfigure{heatmap_patents}{Correlation matrix between topics and patent intensity}{0.8}
 %
@@ -279,7 +268,15 @@ Another area of interest is testing whether the derived topics can serve as fact
 
 \bibliography{mylibrary2}
 
-\section*{Appendix}
+\section*{Appendix A: Text conversion to bag-of-words}
+
+After filtering the firms, I employ the \texttt{spacy} Python library to conduct lemmatization on all the refined texts. Lemmatization transforms words into their base form, ensuring consistent semantics. As an illustration, words such as ``take'', ``took'', and ``taken'' are standardized to ``take''. To do so, \texttt{spacy} leverages WordNet---a comprehensive English lexical database curated by Princeton University.
+
+To extract significant collocations---like ``patent application''---which provide richer semantic insights than individual words, this research adopts the collocation detection method outlined in \cite{Mikolov2013-be}. This methodology yields pertinent bigrams and trigrams. A minimum occurrence threshold of 5 ensures that only the most statistically relevant combinations are incorporated into the dictionary.
+
+This research compiles the entirety of discovered words, bigrams, and trigrams to formulate a dictionary. 
+
+Lastly, the texts are transformed into a bag-of-words model using both the dictionary and the n-gram processed texts. In this representation, each word's frequency in a document, denoted as \(c_{ij}\), is preserved, but the sequence of words is omitted, leading to the final depiction of the corpus.
 
 \begin{figure}[H] % Use [H] to force the figure to be here
   \centering
@@ -300,7 +297,7 @@ Another area of interest is testing whether the derived topics can serve as fact
   \label{fig:cdf}
 \end{figure}
 
-\insertfigure{stackedplot_at}{Accumulated Assets of Firms in the Upper Quartile of \texttt{topic\_kk}}{0.8}
+\insertfigure{stackedplot_at}{Accumulated Assets of Firms in the Upper Quartile of $Topic_{kk}$}{0.8}
 
 
 
