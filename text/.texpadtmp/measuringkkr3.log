@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.17)  14 OCT 2023 17:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.17)  14 OCT 2023 17:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -199,11 +199,133 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 39.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 54.
+(Font)              <12> on input line 53.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 54.
+(Font)              <8> on input line 53.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 54.
+(Font)              <6> on input line 53.
 [1
 
-{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdfte
+{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4] [5{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] (./dicfullmc10thr10defnob5noa0_8_4t/file_counts.tex) [6]
+Overfull \hbox (9.5651pt too wide) in paragraph at lines 170--171
+\OT1/cmr/m/n/12 Upon hav-ing the cor-pus and the dic-tio-nary, I em-ploy un-su-per-vised topic mod-el-ing|specifically,
+ []
+
+<dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png, id=31, 1202.4925pt x 705.63625pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png  used on input line 175.
+(pdftex.def)             Requested size: 375.80544pt x 220.52155pt.
+(./dicfullmc10thr10defnob5noa0_8_4t/topic_map_sample.tex
+Overfull \hbox (42.986pt too wide) in paragraph at lines 4--21
+ [][] 
+ []
+
+)
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 196.
+ [7 <./dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png>] (./dicfullmc10thr10defnob5noa0_8_4t/tpcavg_tech.tex)
+<dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg, id=38, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg  used on input line 206.
+(pdftex.def)             Requested size: 375.80544pt x 404.04001pt.
+ [8] [9 <./dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg>]
+<dicfullmc10thr10defnob5noa0_8_4t/heatmap.png, id=45, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/heatmap.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/heatmap.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/heatmap.png  used on input line 218.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+<dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png, id=46, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png  used on input line 224.
+(pdftex.def)             Requested size: 328.82707pt x 263.04263pt.
+ [10 <./dicfullmc10thr10defnob5noa0_8_4t/heatmap.png>]
+<dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png, id=51, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png  used on input line 226.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+<dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png, id=52, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png  used on input line 228.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+ [11 <./dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png> <./dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png>]
+<dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png, id=58, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png  used on input line 232.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+ [12 <./dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png>]
+<dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png, id=63, 3011.25pt x 2409.0pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png  used on input line 236.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+ [13 <./dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png>]
+<dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg, id=69, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg  used on input line 244.
+(pdftex.def)             Requested size: 375.80544pt x 404.04001pt.
+ [14 <./dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png>]
+<dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg, id=74, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg  used on input line 248.
+(pdftex.def)             Requested size: 375.80544pt x 404.04001pt.
+ [15 <./dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg>]
+<dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg, id=78, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg  used on input line 252.
+(pdftex.def)             Requested size: 375.80544pt x 404.04001pt.
+ [16 <./dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg>]
+<dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg, id=82, 1162.3425pt x 1249.66875pt>
+File: dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg  used on input line 256.
+(pdftex.def)             Requested size: 375.80544pt x 404.04001pt.
+ [17 <./dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg>] [18 <./dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg>] (/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.bbl
+Underfull \hbox (badness 3108) in paragraph at lines 50--51
+[]\OT1/cmr/m/n/12 Eisfeldt, An-drea L, Ed-ward Kim, and Dim-itris Pa-paniko-laou (2020) ``In-tan-gi-ble
+ []
+
+[19] [20])
+<cdf_words.png, id=96, 462.528pt x 346.896pt>
+File: cdf_words.png Graphic file (type png)
+<use cdf_words.png>
+Package pdftex.def Info: cdf_words.png  used on input line 288.
+(pdftex.def)             Requested size: 211.38832pt x 158.54192pt.
+<cdf_words_zoom.png, id=97, 462.528pt x 346.896pt>
+File: cdf_words_zoom.png Graphic file (type png)
+<use cdf_words_zoom.png>
+Package pdftex.def Info: cdf_words_zoom.png  used on input line 295.
+(pdftex.def)             Requested size: 211.38832pt x 158.54192pt.
+File: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png Graphic file (type png)
+<use dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png>
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png  used on input line 303.
+(pdftex.def)             Requested size: 375.80544pt x 300.64641pt.
+ [21 <./cdf_words.png> <./cdf_words_zoom.png>] [22] (/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 4269 strings out of 476025
+ 80567 string characters out of 5790017
+ 1867388 words of memory out of 5000000
+ 24680 multiletter control sequences out of 15000+600000
+ 519398 words of font info for 56 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 67i,16n,77p,869b,483s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on "/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.pdf" (22 pages, 1947722 bytes).
+PDF statistics:
+ 155 PDF objects out of 1000 (max. 8388607)
+ 85 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+

@@ -14,52 +14,51 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Warning--there is no volume, number, and pages in Blei2003-ay
 Warning--there is no volume, number, and pages in Crouzet2022-ic
 Warning--empty note in Eisfeldt2018-iy
-Warning--there is no volume, number, and pages in Fernald2015-io
 Warning--there is no volume, number, and pages in Kogan2017-fx
 Warning--empty note in Li2014-zp
 Warning--empty note in McGrattan2001-kc
 Warning--empty journal in Mikolov2013-be
 Warning--there is no volume, number, and pages in Mikolov2013-be
 Warning--there is no volume, number, and pages in Peri2015-qt
-You've used 41 entries,
+You've used 30 entries,
             6826 wiz_defined-function locations,
-            1562 strings with 15791 characters,
-and the built_in function-call counts, 49660 in all, are:
-= -- 8297
-> -- 2138
-< -- 103
-+ -- 688
-- -- 798
-* -- 2825
-:= -- 6699
-add.period$ -- 34
-call.type$ -- 41
-change.case$ -- 295
-chr.to.int$ -- 40
-cite$ -- 51
-duplicate$ -- 1195
-empty$ -- 2279
-format.name$ -- 672
-if$ -- 13198
+            1492 strings with 14285 characters,
+and the built_in function-call counts, 36712 in all, are:
+= -- 6157
+> -- 1670
+< -- 74
++ -- 537
+- -- 635
+* -- 2114
+:= -- 4945
+add.period$ -- 23
+call.type$ -- 30
+change.case$ -- 221
+chr.to.int$ -- 29
+cite$ -- 39
+duplicate$ -- 850
+empty$ -- 1640
+format.name$ -- 530
+if$ -- 9803
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 0
-newline$ -- 136
-num.names$ -- 415
-pop$ -- 515
+newline$ -- 103
+num.names$ -- 300
+pop$ -- 389
 preamble$ -- 1
-purify$ -- 292
+purify$ -- 220
 quote$ -- 0
-skip$ -- 3417
+skip$ -- 2486
 stack$ -- 0
-substring$ -- 3486
-swap$ -- 195
-text.length$ -- 205
+substring$ -- 2434
+swap$ -- 126
+text.length$ -- 158
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 681
-warning$ -- 10
-while$ -- 350
+type$ -- 502
+warning$ -- 9
+while$ -- 247
 width$ -- 0
-write$ -- 603
-(There were 10 warnings)
+write$ -- 439
+(There were 9 warnings)
