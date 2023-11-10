@@ -19,45 +19,46 @@ Warning--empty note in Li2014-zp
 Warning--empty note in McGrattan2001-kc
 Warning--empty journal in Mikolov2013-be
 Warning--there is no volume, number, and pages in Mikolov2013-be
-You've used 30 entries,
+Warning--there is no volume, number, and pages in Peri2015-qt
+You've used 32 entries,
             6826 wiz_defined-function locations,
-            1491 strings with 14229 characters,
-and the built_in function-call counts, 36915 in all, are:
-= -- 6186
-> -- 1666
-< -- 75
-+ -- 535
-- -- 630
-* -- 2124
-:= -- 4968
-add.period$ -- 23
-call.type$ -- 30
-change.case$ -- 222
-chr.to.int$ -- 29
-cite$ -- 38
-duplicate$ -- 860
-empty$ -- 1656
-format.name$ -- 526
-if$ -- 9851
+            1503 strings with 14494 characters,
+and the built_in function-call counts, 39440 in all, are:
+= -- 6615
+> -- 1780
+< -- 80
++ -- 571
+- -- 673
+* -- 2268
+:= -- 5307
+add.period$ -- 25
+call.type$ -- 32
+change.case$ -- 237
+chr.to.int$ -- 31
+cite$ -- 41
+duplicate$ -- 918
+empty$ -- 1766
+format.name$ -- 562
+if$ -- 10525
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 0
-newline$ -- 103
-num.names$ -- 302
-pop$ -- 391
+newline$ -- 109
+num.names$ -- 322
+pop$ -- 415
 preamble$ -- 1
-purify$ -- 221
+purify$ -- 236
 quote$ -- 0
-skip$ -- 2500
+skip$ -- 2674
 stack$ -- 0
-substring$ -- 2473
-swap$ -- 135
-text.length$ -- 167
+substring$ -- 2648
+swap$ -- 144
+text.length$ -- 176
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 502
-warning$ -- 8
-while$ -- 252
+type$ -- 536
+warning$ -- 9
+while$ -- 269
 width$ -- 0
-write$ -- 440
-(There were 8 warnings)
+write$ -- 469
+(There were 9 warnings)

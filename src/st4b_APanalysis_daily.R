@@ -6,6 +6,7 @@ library(stringr)
 library(stargazer)
 library(rsq)
 library(reshape2)
+library(moments)
 
 ## Loading functions -----------
 splitvar = "ntile_topic_kk"
@@ -200,7 +201,7 @@ understand_topics <- function(topic_map, textfolder){
 
   firms_by_ik = topic_map %>%
     drop_na(ntile_topic_kk, ikpt_ntile) %>%
-    group_by(ntile_topic_kk, ikpt_ntile) %>%
+    group_by(, ikpt_ntile) %>%
     summarize(count = n())
   
   topicvsikpt_hm <- ggplot(firms_by_ik, aes(ntile_topic_kk, ikpt_ntile)) +    # Create default ggplot2 heatmap
@@ -230,7 +231,7 @@ cequity_mapper <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring 
 
 ## Loading patent_ik --------
 print("Cleaning patent database...")
-patent_ik <- read.csv("/Volumes/Pedro/Replications/Kogan, Papanikolaou, Seru, Stoffman - Technological innovation/KPSS_2020_public.csv") %>%
+patent_ik <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/KPSS_2020_public.csv") %>%
   mutate(year = as.numeric(substr(filing_date,7,10)) ) %>%
   mutate(xi_real = coalesce(xi_real, 0)) %>%
   group_by(permno, year) %>%
@@ -245,7 +246,7 @@ patent_ik <- read.csv("/Volumes/Pedro/Replications/Kogan, Papanikolaou, Seru, St
 
 modelname = "dicfullmc5thr10_default_flt_4t"
 dir.create(file.path("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/text/", modelname), showWarnings = FALSE)
-figfolder = paste0("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/text/", modelname, "/")
+figfolder = paste0("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname, "/")
 
 ## Cleaning Fama-French factors -------------
 print("Loading Fama-French factors...")
@@ -329,6 +330,53 @@ stox = stoxda_p2005sampled_sh %>%
   left_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "year")) %>%
   filter(crit_ALL == 1) %>%
   left_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) 
+
+### Skewness analysis
+
+stox_by_kk = stox %>%
+  mutate(ym = y) %>%
+  group_by(ym, PERMNO) %>%
+  summarize(moment = kurtosis(RET), group = mean(max_topic)) %>%
+  ungroup() %>%
+  filter(group - floor(group) == 0) %>%
+  mutate(group = factor(group)) %>%
+  drop_na(group) 
+
+stox_by_kk2 = stox_by_kk %>%
+  group_by(group, ym) %>%
+  summarize(moment = mean(moment, na.rm = TRUE))
+  
+ggplot(stox_by_kk2, aes(x = ym, y = moment, group = group, color = group)) +
+  geom_line() +
+  labs(x = "y", y = "moment") +
+  scale_color_discrete(name = "group") +
+  theme_minimal() 
+
+stox_by_kkd = stox %>%
+  group_by(ym, PERMNO) %>%
+  summarize(RET = mean(RET), max_topic = mean(max_topic)) %>%
+  ungroup() %>%
+  mutate(ym = ym(ym)) %>%
+  drop_na(RET)   %>%
+  group_by(ym, max_topic) %>%
+  summarize(moment = kurtosis(RET)) %>%
+  ungroup() %>%
+  rename(group = max_topic)%>%
+  filter(group - floor(group) == 0) %>%
+  mutate(ym = factor(ym)) %>%
+  drop_na(group)
+
+stox_by_kk2 = stox_by_kkd %>%
+  group_by(group, ym) %>%
+  summarize(moment = mean(moment, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(group = factor(group))
+
+ggplot(stox_by_kk2, aes(x = ym, y = moment, group = group, color = group)) +
+  geom_line() +
+  labs(x = "y", y = "moment") +
+  scale_color_discrete(name = "group") +
+  theme_minimal()  
 
 bollerslev <- function(df){
   df = df %>%
