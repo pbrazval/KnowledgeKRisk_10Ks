@@ -6,6 +6,7 @@ library(stringr)
 library(stargazer)
 library(rsq)
 library(reshape2)
+library(moments)
 
 ## Loading functions -----------
 splitvar = "ntile_topic_kk"
@@ -102,7 +103,6 @@ odds <- function(p){
   return(p/(1-p))
 }
 
-
 understand_topics <- function(topic_map, textfolder){
   print("Understanding topics...")
   results = find_k(topic_map)
@@ -117,7 +117,7 @@ understand_topics <- function(topic_map, textfolder){
     mutate(kkpt_ntile = ntile(K_int_Know/at, nt)) %>%
     mutate(ikpt_ntile = ntile(K_int/at, nt)) %>%
     ungroup() 
-  
+    
   create_topic_plots(topic_map, textfolder)  
   
   bytech = topic_map %>%
@@ -143,7 +143,7 @@ understand_topics <- function(topic_map, textfolder){
   patentcor = topic_map %>%
     select(starts_with("topic"), "xir_cumsum") 
   patentcor_matrix <- melt(cor(patentcor, use = "complete.obs"))
-  
+
   patentcor = topic_map %>%
     select(starts_with("topic"), "xir_cumsum") 
   patentcor_matrix <- melt(cor(patentcor, use = "complete.obs"))
@@ -197,7 +197,7 @@ understand_topics <- function(topic_map, textfolder){
     scale_fill_gradient2(low = "white", high = "red")
   topicvskkpt_hm
   ggsave(paste0(textfolder, "topicvskkpt_hm.png"), plot = topicvskkpt_hm, width = 10, height = 8, dpi = 300)
-  
+
   firms_by_ik = topic_map %>%
     drop_na(ntile_topic_kk, ikpt_ntile) %>%
     group_by(ntile_topic_kk, ikpt_ntile) %>%
@@ -224,13 +224,9 @@ understand_topics <- function(topic_map, textfolder){
 #12: AMEX
 #14: NASDAQ
 
-## Loading cequity_mapper --------
-
-cequity_mapper <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/cequity_mapper.csv")
-
 ## Loading patent_ik --------
 print("Cleaning patent database...")
-patent_ik <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/KPSS_2020_public.csv")%>%  
+patent_ik <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/KPSS_2020_public.csv") %>%
   mutate(year = as.numeric(substr(filing_date,7,10)) ) %>%
   mutate(xi_real = coalesce(xi_real, 0)) %>%
   group_by(permno, year) %>%
@@ -243,8 +239,8 @@ patent_ik <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Githu
 
 ## Creating figfolder out of dicname --------
 
-modelname = "dicfullmc5thr10_default_flt_4t"
-dir.create(file.path("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname), showWarnings = FALSE)
+modelname = "dicfullmc10thr10defnob40noa1_4t"
+dir.create(file.path("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/text/", modelname), showWarnings = FALSE)
 figfolder = paste0("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname, "/")
 
 ## Cleaning Fama-French factors -------------
@@ -271,7 +267,8 @@ linkt = linkt %>%
   select(-naics) %>%
   group_modify(~create_ind12(.x)) %>%
   group_modify(~add_hi_tech_column(.x)) %>%
-  distinct()
+  distinct(cik, .keep_all = TRUE) %>%
+  drop_na(cik)
 
 ## Cleaning skilldata --------
 
@@ -315,20 +312,68 @@ topic_map <- read.csv(paste0("~/Documents/PhD (local)/Research/By Topic/Measurin
   left_join(compustat_thin, by = c("LPERMNO", "year")) %>%
   mutate(xir_cumsum = ifelse(is.na(xi_cumsum/at), 0, xi_cumsum/at)) %>%
   mutate(xir_total = ifelse(is.na(xi_total/at), 0, xi_total/at))  
-
+  
 topic_map = understand_topics(topic_map, figfolder) %>%
   select(-K_int_Know, -K_int)
 
 ## Cleaning stocks data --------
-load("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/stoxwe_post2005short.Rdata") 
+load("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/stoxda_p2005sampled_sh.Rdata") 
+cequity_mapper <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/cequity_mapper.csv")
 
-stox = stoxwe_post2005short %>%
+stox = stoxda_p2005sampled_sh %>%
   mutate(date = ymd(date)) %>%
   mutate(y = year(date)) %>%
   mutate(ym = y*100 + month(date)) %>%
   left_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "year")) %>%
   filter(crit_ALL == 1) %>%
   left_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) 
+
+### Skewness analysis
+
+stox_by_kk = stox %>%
+  mutate(ym = y) %>%
+  group_by(ym, PERMNO) %>%
+  summarize(moment = kurtosis(RET), group = mean(max_topic)) %>%
+  ungroup() %>%
+  filter(group - floor(group) == 0) %>%
+  mutate(group = factor(group)) %>%
+  drop_na(group) 
+
+stox_by_kk2 = stox_by_kk %>%
+  group_by(group, ym) %>%
+  summarize(moment = mean(moment, na.rm = TRUE))
+  
+ggplot(stox_by_kk2, aes(x = ym, y = moment, group = group, color = group)) +
+  geom_line() +
+  labs(x = "y", y = "moment") +
+  scale_color_discrete(name = "group") +
+  theme_minimal() 
+
+stox_by_kkd = stox %>%
+  group_by(ym, PERMNO) %>%
+  summarize(RET = mean(RET), max_topic = mean(max_topic)) %>%
+  ungroup() %>%
+  mutate(ym = ym(ym)) %>%
+  drop_na(RET)   %>%
+  group_by(ym, max_topic) %>%
+  summarize(moment = kurtosis(RET)) %>%
+  ungroup() %>%
+  rename(group = max_topic)%>%
+  filter(group - floor(group) == 0) %>%
+  mutate(ym = factor(ym)) %>%
+  drop_na(group)
+
+stox_by_kk2 = stox_by_kkd %>%
+  group_by(group, ym) %>%
+  summarize(moment = mean(moment, na.rm = TRUE)) %>%
+  ungroup() %>%
+  mutate(group = factor(group))
+
+ggplot(stox_by_kk2, aes(x = ym, y = moment, group = group, color = group)) +
+  geom_line() +
+  labs(x = "y", y = "moment") +
+  scale_color_discrete(name = "group") +
+  theme_minimal()  
 
 bollerslev <- function(df){
   df = df %>%
@@ -363,7 +408,7 @@ average_jk <- function(matrix) {
 
 semicov <- function(stox){
   stox  = stox %>%
-    pivot_wider(names_from = date, values_from = RET) %>%
+  pivot_wider(names_from = date, values_from = RET) %>%
     column_to_rownames(var = "PERMNO")
   p = as.matrix(stox)
   p[p<0] <- 0
@@ -389,7 +434,7 @@ semicov <- function(stox){
 #   mutate(cumsum_awr = cumsum(aw_residuals)) %>%
 #   ungroup() %>%
 #   yw2day()
-# 
+#   
 # ggplot(stox_aw, aes(x = yw, y = cumsum_awr, color = as.factor(ntile_topic_kk))) +
 #   geom_line() +
 #   labs(x = "Year-Week", y = "Value", color = "Ntile Topic KK") +
@@ -397,20 +442,20 @@ semicov <- function(stox){
 #   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 
 # 
-stox = stoxwe_post2005short %>%
-  mutate(y = yw%/%100) %>%
-  inner_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "year")) %>%
-  filter(crit_ALL == 1) %>%
-  inner_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) %>%
-  filter(y >= min(topic_map$year)) %>%
-  left_join(ff3f, by = "ym") %>%
-  mutate(eretm = retm - RF) %>%
-  drop_na(RET) %>%
-  nest_by(PERMNO) %>%
-  mutate(mod = list(lm(formula3ff <- retm ~ RF, data = data))) %>% #mutate(mod = list(lm(formula3ff <- eretm ~ Mkt.RF, data = data))) %>%
-  mutate(augmented = list(broom::augment(mod, data = data))) %>%
-  select(-mod, -data) %>%
-  unnest(augmented)
+# stox = stoxwe_post2005short %>%
+#   mutate(y = yw%/%100) %>%
+#   inner_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "year")) %>%
+#   filter(crit_ALL == 1) %>%
+#   inner_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) %>%
+#   filter(y >= min(topic_map$year)) %>%
+#   left_join(ff3f, by = "ym") %>%
+#   mutate(eretm = retm - RF) %>%
+#   drop_na(RET) %>%
+#   nest_by(PERMNO) %>%
+#   mutate(mod = list(lm(formula3ff <- retm ~ RF, data = data))) %>% #mutate(mod = list(lm(formula3ff <- eretm ~ Mkt.RF, data = data))) %>%
+#   mutate(augmented = list(broom::augment(mod, data = data))) %>%
+#   select(-mod, -data) %>%
+#   unnest(augmented)
 
 mean_cor = function(cormatrix, mask){
   diag(cormatrix) <- 0
@@ -429,7 +474,7 @@ cor_comparison = function(stox, year){
     select(-yw) %>%
     cor(., use = "pairwise.complete.obs")
   dummy_mask <- matrix(1, nrow = nrow(cormat), ncol = ncol(cormat))
-  
+
   full1 = mean_cor(cormat, dummy_mask)
   full2 = mean_cor(abs(cormat), dummy_mask)
   
@@ -523,8 +568,8 @@ compustat_sel = comp_funda2%>%
   ungroup() %>%
   mutate(meg = ifelse(me < med_NYSE_me, 1, 2),
          mbg = case_when(mb < med_NYSE_mb30p ~ 1,
-                         mb >= med_NYSE_mb30p & mb <= med_NYSE_mb70p ~ 2,
-                         mb > med_NYSE_mb70p ~ 3)) %>%
+                              mb >= med_NYSE_mb30p & mb <= med_NYSE_mb70p ~ 2,
+                              mb > med_NYSE_mb70p ~ 3)) %>%
   mutate(pf6_name = 10*meg+mbg)%>%
   group_by(y) %>%
   mutate(mb_5tile = ntile(mb, 5), me_5tile = ntile(me, 5)) %>%
@@ -698,7 +743,6 @@ we_ret_bygroup = compustat_sel %>%
   yw2day()
 
 library(zoo)
-
 qt_ret_bygroup = we_ret_bygroup %>%
   group_by(max_topic) %>%
   mutate(eret3ma = rollmean(eret, k=13, fill=NA, align='right')) 

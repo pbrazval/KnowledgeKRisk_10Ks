@@ -9,7 +9,7 @@ library(reshape2)
 library(zoo)
 library(broom)
 library(nlme)
-modelname = "dicfullmc10thr10defnob5noa0_8_6t"
+modelname = "dicfullmc10thr10defnob40noa1_4t"
 
 ## Loading all functions from the auxfun folder -----------
 file_list <- list.files("auxfun", full.names = TRUE)
