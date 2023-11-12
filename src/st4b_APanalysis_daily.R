@@ -6,36 +6,47 @@ library(stringr)
 library(stargazer)
 library(rsq)
 library(reshape2)
-library(lubridate)
 library(zoo)
+library(lubridate)
 library(broom)
 library(nlme)
-library(zoo)
+library(moments)
 source("utilities_R.R")
 
 ## Basic configurations -----------
 
 splitvar = "ntile_topic_kk"
-modelname = "dicfullmc5thr10_default_flt_4t"
+modelname = "dicfullmc10thr10defnob40noa1_4t"
 dir.create(file.path("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname), showWarnings = FALSE)
 figfolder = paste0("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname, "/")
 
-
+## Loading all csvs -----------
 patent_ik_orig <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/KPSS_2020_public.csv")
 cequity_mapper <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/cequity_mapper.csv")
 ff3fw_orig = read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/ff3fw.csv")
 ff5fw_orig = read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/ff5fw.csv") 
+ff3fm_orig = read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/FF3F.csv")
+ff5fm_orig = read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/FF5F.csv") 
 linkt_orig <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/CRSP-Compustat Merged Database - Linking Table.csv")
 load("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/comp_funda2.Rdata")
 peterstaylor <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/peterstaylor.csv")
 skilldata <- read_csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/belo_labor_skill_data.csv")
 topic_map_orig <- read.csv(paste0("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/", modelname, "/topic_map_2006_2022.csv"))
 load("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/stoxwe_post2005short.Rdata") 
+load("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/stoxmo_post2000short.Rdata")
+load("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/stoxda_post2005veryshort.Rdata")
 
-stox_orig = stoxwe_post2005short
+## Defining source of stocks information -----------
+stoxwe_orig = stoxwe_post2005short
+stoxmo_orig = stoxmo_post2000short
+stoxda_orig = stoxda_post2005veryshort
+
+## Recreating equity mapper. May be commented for speed
+cequity_mapper = redo_equity_mapper(comp_funda2, figfolder)
 
 ## Cleaning dataframes --------
 print("Cleaning dataframes.")
+
 patent_ik <- patent_ik_orig %>%  
   mutate(year = as.numeric(substr(filing_date,7,10)) ) %>%
   mutate(xi_real = coalesce(xi_real, 0)) %>%
@@ -47,8 +58,17 @@ patent_ik <- patent_ik_orig %>%
   ungroup() %>%
   rename(LPERMNO = permno)  
 
+ff3fm <- ff3fm_orig %>%
+  cleanff() %>%
+  drop_na()
+
+ff5fm <- ff5fm_orig %>%
+  cleanff() %>%
+  drop_na()
+
 ff3fw <- ff3fw_orig %>%
-  cleanffw()
+  cleanffw() %>%
+  drop_na()
 
 ff5fw <- ff5fw_orig %>%
   cleanffw() %>%
@@ -81,15 +101,15 @@ skilldata <- skilldata %>%
   ungroup()
 
 ## Creating topic_map --------
-
-compustat_thin = comp_funda2%>%
+compustat_thin = comp_funda2 %>%
   mutate(gvkey = as.integer(GVKEY)) %>%
   left_join(peterstaylor, by = c("fyear", "gvkey"))  %>%
   rename(year = fyear) %>%
   select(K_int_Know, K_int, at, LPERMNO, year)
 
+# CIKs are not unique -- they may map to multiple PERMNOs. May need to consolidate later.
 topic_map <- topic_map_orig %>%
-  left_join(linkt, by = c("CIK" = "cik")) %>%
+  left_join(linkt, by = c("CIK" = "cik"), relationship = "many-to-many") %>%
   mutate(naics4 = as.numeric(naics4)) %>%
   left_join(skilldata, by = c("naics4", "year")) %>%
   left_join(patent_ik, by = c("LPERMNO", "year")) %>%
@@ -101,42 +121,46 @@ topic_map <- topic_map_orig %>%
   mutate(xi_total = ifelse(is.na(xi_total), 0, xi_total)) %>%
   left_join(compustat_thin, by = c("LPERMNO", "year")) %>%
   mutate(xir_cumsum = ifelse(is.na(xi_cumsum/at), 0, xi_cumsum/at)) %>%
-  mutate(xir_total = ifelse(is.na(xi_total/at), 0, xi_total/at))  
-
+  mutate(xir_total = ifelse(is.na(xi_total/at), 0, xi_total/at))  %>%
+  group_by(CIK, year) %>%
+  fill(K_int_Know, K_int, at, Skill, .direction = "down") %>%
+  fill(K_int_Know, K_int, at, Skill, .direction = "up")  %>%
+  group_by(CIK, year) %>%
+  slice(1) %>%
+  ungroup()
+ 
 topic_map = understand_topics(topic_map, figfolder) %>%
   select(-K_int_Know, -K_int)
 
-stox = stox_orig %>%
+stoxmo = stoxmo_orig %>%
   mutate(date = ymd(date)) %>%
   mutate(y = year(date)) %>%
   mutate(ym = y*100 + month(date)) %>%
-  left_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "year")) %>%
+  left_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y")) %>%
   filter(crit_ALL == 1) %>%
   left_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) 
 
-
-
-
-stox = stoxwe_post2005short %>%
+stoxwe = stoxwe_orig %>%
   mutate(y = yw%/%100) %>%
-  inner_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "year")) %>%
+  inner_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "y")) %>%
   filter(crit_ALL == 1) %>%
   inner_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) %>%
   filter(y >= min(topic_map$year)) %>%
-  left_join(ff3f, by = "ym") %>%
-  mutate(eretm = retm - RF) %>%
-  drop_na(RET) %>%
+  left_join(ff3fw, by = "yw") %>%
+  mutate(eretw = retw - RF) %>%
+  drop_na(retw) %>%
   nest_by(PERMNO) %>%
-  mutate(mod = list(lm(formula3ff <- retm ~ RF, data = data))) %>% #mutate(mod = list(lm(formula3ff <- eretm ~ Mkt.RF, data = data))) %>%
+  mutate(mod = list(lm(formula3ff <- eretw ~ Mkt.RF, data = data))) %>% 
   mutate(augmented = list(broom::augment(mod, data = data))) %>%
   select(-mod, -data) %>%
   unnest(augmented)
 
-mean_cor = function(cormatrix, mask){
-  diag(cormatrix) <- 0
-  diag(mask) <- 0
-  return(sum(cormatrix*mask, na.rm = TRUE)/sum(mask, na.rm = TRUE))
-}
+topic_map = topic_map %>%
+  group_by(year) %>%
+  mutate(ntile_topic_0 = ntile(topic_0, 4)) 
+
+
+
 
 ndim_mb = 5
 ndim_me = 5
@@ -156,7 +180,7 @@ compustat_sel = comp_funda2%>%
   select(-cusip) %>%
   rename(y = fyear) %>%
   mutate(kk_share = K_int_Know/ppegt) %>%
-  inner_join(stox, by = c("y", "CUSIP8")) %>%
+  inner_join(stoxwe, by = c("y", "CUSIP8")) %>%
   group_by(y) %>%
   drop_na(me, mb) %>%
   mutate(med_kk_share = median(kk_share[kk_share != 0], na.rm = TRUE),

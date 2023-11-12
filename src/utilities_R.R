@@ -237,3 +237,115 @@ average_jk <- function(matrix) {
   average = sum(mask*matrix, na.rm = TRUE) / sum(mask, na.rm = TRUE)
   return(average)
 }
+
+bollerslev <- function(df){
+  df = df %>%
+    select(PERMNO, RET, date, ym) %>%
+    group_by(date, PERMNO) %>%
+    summarize(RET = mean(RET), ym = mean(ym)) %>%
+    ungroup() %>%
+    nest_by(ym) %>%
+    mutate(wow = list(semicov(data))) %>%
+    summarize(Pbar = wow$Pbar, Nbar = wow$Nbar, Mbar = wow$Mbar) %>%
+    mutate(NPbar = Nbar+Pbar) %>%
+    select(-Nbar, -Pbar) %>%
+    mutate(Cbar = NPbar + Mbar) %>%
+    mutate(ym = as.Date(as.character(100*ym + 1), format = "%Y%m%d"))
+  
+  ggplot(df, aes(x = ym)) +
+    geom_line(aes(y = Cbar), color = "blue", linetype = "dotted") +
+    geom_line(aes(y = NPbar), color = "green") +
+    geom_line(aes(y = Mbar), color = "red") +
+    labs(x = "Date", y = "Values") +
+    ggtitle("Line Plot of Cbar, NPbar, and Mbar") +
+    theme_minimal()
+}  
+
+
+cor_comparison = function(stox, year){
+  print("Comparing correlations between subsets...")
+  cormat = stox %>% #filter(y == year) %>%
+    arrange(PERMNO) %>%
+    select(PERMNO, yw, .resid) %>%
+    group_by(PERMNO, yw) %>%
+    summarize(.resid = mean(.resid)) %>%
+    pivot_wider(names_from = PERMNO, values_from = .resid, values_fill = NA) %>%
+    select(-yw) %>%
+    cor(., use = "pairwise.complete.obs")
+  dummy_mask <- matrix(1, nrow = nrow(cormat), ncol = ncol(cormat))
+  
+  full1 = mean_cor(cormat, dummy_mask)
+  full2 = mean_cor(abs(cormat), dummy_mask)
+  
+  kk_mask = stox %>%
+    mutate(kk_uptile = ntile_topic_kk == 4) %>% #filter(y == year) %>%
+    arrange(PERMNO) %>%
+    group_by(PERMNO) %>%
+    summarize(kk_uptile = prod(kk_uptile, na.rm = TRUE)) %>%
+    ungroup() %>%
+    select(PERMNO, kk_uptile) 
+  full_mask = as.matrix(kk_mask$kk_uptile %*% t(kk_mask$kk_uptile))
+  
+  subset1 = mean_cor(cormat, full_mask)
+  subset2 = mean_cor(abs(cormat), full_mask)
+  df <- data.frame(matrix(c(full1, full2, subset1, subset2), nrow = 2, ncol = 2))
+  rownames(df) = c("True", "Abs")
+  colnames(df) = c("Full", "Subset")
+  return(df)
+}
+
+mean_cor = function(cormatrix, mask){
+  diag(cormatrix) <- 0
+  diag(mask) <- 0
+  return(sum(cormatrix*mask, na.rm = TRUE)/sum(mask, na.rm = TRUE))
+}
+
+redo_equity_mapper <- function(comp_funda2, textfolder){
+  
+  load("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/stoxmo_post2000short.Rdata")
+  cpi_orig = read_csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/CPIAUCSL.csv")
+
+  crit_exchg = comp_funda2 %>% 
+    select(LPERMNO, exchg, fyear) %>%
+    mutate(crit_EXCHG = exchg %in% c(11, 12, 14))
+  
+  cpi = cpi_orig %>%
+    rename(cpi = CPIAUCSL) %>%
+    mutate(ym = as.numeric(format(as.Date(DATE), "%Y%m"))) %>%
+    mutate(m = as.numeric(format(as.Date(DATE), "%m"))) %>%
+    mutate(y = as.numeric(format(as.Date(DATE), "%Y")))
+  
+  ref_cpi =  cpi$cpi[cpi$ym == 201501]
+  
+  cequity_mapper = stoxmo_post2000short %>%
+    mutate(ym = date%/%100) %>%
+    left_join(cpi, by = "ym") %>%
+    left_join(crit_exchg, by = c("PERMNO" = "LPERMNO", "y" = "fyear"), relationship = "many-to-many") %>%
+    filter(m == 6) %>%
+    mutate(constp_PRC = PRC*ref_cpi/cpi) %>%
+    mutate(crit_PRC = constp_PRC > 5) %>%
+    mutate(crit_SHRCD = SHRCD %in% c(10, 11)) %>%
+    mutate(crit_EXCHG = as.double(crit_EXCHG)) %>%
+    arrange(y) %>%
+    group_by(PERMNO)%>%
+    mutate(crit_EXCHG = as.logical(data.table::nafill(crit_EXCHG, type = "locf"))) %>%
+    mutate(crit_EXCHG = ifelse(is.na(crit_EXCHG), FALSE, crit_EXCHG)) %>%
+    mutate(crit_ALL = crit_PRC & crit_SHRCD & crit_EXCHG) %>%
+    drop_na(crit_ALL) %>%
+    select(PERMNO, y, starts_with("crit_"))
+  
+  mean_groups = cequity_mapper %>%
+    filter(y >= 2013) %>%
+    group_by(y) %>% 
+    summarize(mean_EXCHG = round(mean(crit_EXCHG), 3), mean_COMEQ = round(mean(crit_SHRCD), 3), mean_PRC = round(mean(crit_PRC, na.rm = TRUE), 3), mean_ALL = round(mean(crit_ALL), 3))
+  
+  tex_table <- stargazer(mean_groups, label = "tab:stocks_filtering_criteria", title = "Stocks filtering criteria", align = TRUE, header = FALSE, summary = FALSE, rownames = FALSE, digit.separator = "", out = paste0(textfolder, "stocks_filtering_criteria", ".tex"))
+  
+  return(cequity_mapper)
+}
+
+analyze_kurtosis <- function(){
+  
+  
+}
+
