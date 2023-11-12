@@ -1,0 +1,7 @@
+{
+    "forceReCreateRepo": true,
+    "targetRepoPath": "Measuring_KKR_JMP",
+    "sourceRepoPath": ".",
+    "allowedPaths": ["text/*"],
+    "ignoredPaths": ["src/*", "tests/*", "data/*"] 
+}

@@ -1,3 +1,4 @@
 
 *.csv
 *.Rdata
+src/st1_downloading10ks_loop.ipynb
