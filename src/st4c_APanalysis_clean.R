@@ -18,6 +18,7 @@ splitvar = "ntile_topic_kk"
 modelname = "dicfullmc10thr10defnob40noa1_4t"
 dir.create(file.path("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname), showWarnings = FALSE)
 figfolder = paste0("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname, "/")
+print_kurtosis = FALSE
 
 ## Loading all csvs -----------
 patent_ik_orig <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/KPSS_2020_public.csv")
@@ -46,16 +47,34 @@ cequity_mapper = redo_equity_mapper(comp_funda2, figfolder)
 ## Cleaning dataframes --------
 print("Cleaning dataframes.")
 
-patent_ik <- patent_ik_orig %>%  
+linkt = linkt_orig %>%
+  group_by(gvkey) %>%
+  fill(LPERMNO, .direction = "downup") %>%
+  ungroup() %>%
+  mutate(CUSIP8 = substr(cusip, 1, 8)) %>%
+  select(CUSIP8, LPERMNO, sic, cik, gvkey, conm, naics) %>%
+  mutate(naics4 = substr(as.character(naics), 1, 4)) %>%
+  select(-naics) %>%
+  group_modify(~create_ind12(.x)) %>%
+  group_modify(~add_hi_tech_column(.x)) %>%
+  distinct() %>%
+  drop_na(LPERMNO, cik) %>%
+  arrange(LPERMNO, cik) %>%
+  group_by(LPERMNO) %>%
+  slice(1) %>%
+  ungroup()
+  
+
+patent_ik <- patent_ik_orig %>%
+  left_join(linkt, by = c("permno" = "LPERMNO")) %>%
   mutate(year = as.numeric(substr(filing_date,7,10)) ) %>%
   mutate(xi_real = coalesce(xi_real, 0)) %>%
-  group_by(permno, year) %>%
+  group_by(gvkey, year) %>%
   summarize(xi_yeartotal = sum(xi_real)) %>%
   ungroup() %>%
-  group_by(permno) %>%
+  group_by(gvkey) %>%
   mutate(xi_cumsum = cumsum(xi_yeartotal)) %>%
-  ungroup() %>%
-  rename(LPERMNO = permno)  
+  ungroup()  
 
 ff3fm <- ff3fm_orig %>%
   cleanff() %>%
@@ -75,21 +94,6 @@ ff5fw <- ff5fw_orig %>%
   summarize(across(.cols = everything(), sum)) %>%
   ungroup()
 
-linkt = linkt_orig %>%
-  group_by(gvkey) %>%
-  fill(LPERMNO, .direction = "downup") %>%
-  ungroup() %>%
-  mutate(CUSIP8 = substr(cusip, 1, 8)) %>%
-  select(CUSIP8, LPERMNO, sic, cik, gvkey, conm, naics) %>%
-  mutate(naics4 = substr(as.character(naics), 1, 4)) %>%
-  select(-naics) %>%
-  group_modify(~create_ind12(.x)) %>%
-  group_modify(~add_hi_tech_column(.x)) %>%
-  distinct()
-
-expandgrid = expand.grid(YEAR = 2014:2022, naics4 = unique(skilldata %>% filter(YEAR == 2013) %>% pull(ind))) %>%
-  rename(year = YEAR) 
-
 skilldata <- skilldata_orig %>%
   rename(naics4 = ind) %>%
   rename(year = YEAR) %>%
@@ -99,119 +103,115 @@ skilldata <- skilldata_orig %>%
   fill("Skill", .direction = "down") %>%
   ungroup()
 
+expandgrid = expand.grid(YEAR = 2014:2022, naics4 = unique(skilldata %>% filter(year == 2013) %>% pull(naics4))) 
+
 ## Creating topic_map --------
 compustat_pt = comp_funda2 %>%
   mutate(gvkey = as.integer(GVKEY)) %>%
   left_join(peterstaylor, by = c("fyear", "gvkey"))  %>%
   rename(year = fyear) %>%
-  select(K_int_Know, K_int, at, LPERMNO, year)
+  select(K_int_Know, K_int, at, gvkey, year, prcc_f, prcc_c, ppegt, csho, ceq, cusip, exchg)
 
 # CIKs are not unique -- they may map to multiple PERMNOs. May need to consolidate later.
-topic_map <- topic_map_orig %>%
+topic_map_unlabeled <- topic_map_orig %>%
   left_join(linkt, by = c("CIK" = "cik"), relationship = "many-to-many") %>%
   mutate(naics4 = as.numeric(naics4)) %>%
   left_join(skilldata, by = c("naics4", "year")) %>%
-  left_join(patent_ik, by = c("LPERMNO", "year")) %>%
-  arrange(year, LPERMNO) %>%
-  group_by(LPERMNO) %>%
+  left_join(patent_ik, by = c("gvkey", "year")) %>%
+  arrange(year, gvkey) %>%
+  group_by(gvkey) %>%
   fill(xi_cumsum, .direction = "down") %>%
   ungroup() %>%
   mutate(xi_cumsum = ifelse(is.na(xi_cumsum),0, xi_cumsum)) %>%
   mutate(xi_yeartotal = ifelse(is.na(xi_yeartotal), 0, xi_yeartotal)) %>%
-  left_join(compustat_pt, by = c("LPERMNO", "year")) %>%
+  left_join(compustat_pt, by = c("gvkey", "year")) %>%
   mutate(xir_cumsum = ifelse(is.na(xi_cumsum/at), 0, xi_cumsum/at)) %>%
   mutate(xir_total = ifelse(is.na(xi_yeartotal/at), 0, xi_yeartotal/at))  %>%
-  group_by(CIK, year) %>%
+  group_by(gvkey, year) %>%
   fill(K_int_Know, K_int, at, Skill, .direction = "down") %>%
   fill(K_int_Know, K_int, at, Skill, .direction = "up")  %>%
-  group_by(CIK, year) %>%
+  group_by(gvkey, year) %>%
   slice(1) %>%
   ungroup()
- 
-topic_map = understand_topics(topic_map, figfolder) %>%
-  select(-K_int_Know, -K_int)
+
+k <- 0
+labels <- vector("list", 2)
+labels[[1]] <- paste("topic", k, sep = "_")
+labels[[2]] <- as.character(k)
+quantiles = 4
+
+topic_map = understand_topics(topic_map_unlabeled, labels, quantiles, figfolder) 
+ # %>%select(-K_int_Know, -K_int) #removed 2023'11'25
 
 stoxmo = stoxmo_orig %>%
   mutate(date = ymd(date)) %>%
   mutate(y = year(date)) %>%
   mutate(ym = y*100 + month(date)) %>%
-  left_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y")) %>%
+  left_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y"), relationship = "many-to-many") %>%
   filter(crit_ALL == 1) %>%
-  left_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) 
+  left_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year"), relationship = "many-to-many") 
 
 stoxwe = stoxwe_orig %>%
-  mutate(y = yw%/%100) %>%
-  inner_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "y")) %>%
+  mutate(y = yw %/% 100) %>%
+  inner_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "y"), relationship = "many-to-many") %>%
   filter(crit_ALL == 1) %>%
-  inner_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) %>%
+  inner_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year"), relationship = "many-to-many") %>%
   filter(y >= min(topic_map$year)) %>%
   left_join(ff3fw, by = "yw") %>%
   mutate(eretw = retw - RF) %>%
-  drop_na(retw) %>%
-  nest_by(PERMNO) %>%
-  mutate(mod = list(lm(formula3ff <- eretw ~ Mkt.RF, data = data))) %>% 
-  mutate(augmented = list(broom::augment(mod, data = data))) %>%
-  select(-mod, -data) %>%
-  unnest(augmented)
+  drop_na(retw) #%>%
+  # nest_by(PERMNO) %>%
+  # mutate(mod = list(lm(formula3ff <- eretw ~ Mkt.RF, data = data))) %>% 
+  # mutate(augmented = list(broom::augment(mod, data = data))) %>%
+  # select(-mod, -data) %>%
+  # unnest(augmented)
 
-ndim_mb = 5
-ndim_me = 5
-ndim_ik = 3
-ndim_kkc = 2
+if(print_kurtosis){
+  kurtosis_graph(stoxda_orig, cequity_mapper, topic_map)
+}
 
 # CLEANING COMP_FUNDA AND PETERSTAYLOR
-print("Creating compustat_sel...")
-compustat_sel = comp_funda2%>%
-  mutate(gvkey = as.integer(GVKEY)) %>%
-  left_join(peterstaylor, by = c("fyear", "gvkey"))  %>%
-  mutate(K_int_Know = coalesce(K_int_Know, 0)) %>% #filter(ceq > 0) %>%
-  select(prcc_f, prcc_c, ppegt, csho, ceq, cusip, fyear, exchg, K_int, K_int_Know) %>%
+print("Creating stoxwe_with_pfs...")
+
+stoxwe_with_pfs = stoxwe %>%
   mutate(mb = (csho*prcc_f)/ceq, 
          me = csho*prcc_f,
+         kk_share = K_int_Know/ppegt,
          CUSIP8 = str_sub(cusip, 1, -2)) %>%
   select(-cusip) %>%
-  rename(y = fyear) %>%
-  mutate(kk_share = K_int_Know/ppegt) %>%
-  inner_join(stoxwe, by = c("y", "CUSIP8")) %>%
   group_by(y) %>%
   drop_na(me, mb) %>%
-  mutate(med_kk_share = median(kk_share[kk_share != 0], na.rm = TRUE),
-         kk_level = case_when(kk_share == 0 ~ 0,
-                              kk_share < med_kk_share ~ 1,
-                              TRUE ~ 2)) %>%
   mutate(med_NYSE_me = median(me[exchg == 11], na.rm = TRUE)) %>%
   mutate(med_NYSE_mb70p = quantile(mb[exchg == 11], prob = 0.7, na.rm = TRUE)) %>%
   mutate(med_NYSE_mb30p = quantile(mb[exchg == 11], prob = 0.3, na.rm = TRUE)) %>%
   ungroup() %>%
-  mutate(meg = ifelse(me < med_NYSE_me, 1, 2),
-         mbg = case_when(mb < med_NYSE_mb30p ~ 1,
+  mutate(me_group = ifelse(me < med_NYSE_me, 1, 2),
+         mb_group = case_when(mb < med_NYSE_mb30p ~ 1,
                          mb >= med_NYSE_mb30p & mb <= med_NYSE_mb70p ~ 2,
                          mb > med_NYSE_mb70p ~ 3)) %>%
-  mutate(pf6_name = 10*meg+mbg)%>%
+  select(-med_NYSE_me, -med_NYSE_mb30p, -med_NYSE_mb70p) %>%
+  mutate(pf6_name = 10*me_group+mb_group)%>%
   group_by(y) %>%
-  mutate(mb_5tile = ntile(mb, 5), me_5tile = ntile(me, 5)) %>%
-  ungroup() %>%
-  mutate(pf_number = 10*me_5tile + mb_5tile) %>%
+  mutate(pf25_name = 10*ntile(me, 5) + ntile(mb, 5)) %>%
+  mutate(pf36_name = 100*ntile_topic_kk + 10*ntile(me, 3) + ntile(mb, 3)) %>%
   group_by(yw) %>%
-  mutate(kk_bin = cut(topic_kk, breaks = c(0, 0.2, 0.4, 0.6, 0.8, 1), labels = c(1, 2, 3, 4, 5), include.lowest = TRUE)) %>%
-  mutate(kk_bin = ifelse(is.na(kk_bin), -999, kk_bin)) %>%
   ungroup()
 
-pf_ret = compustat_sel %>%
-  group_by(yw, pf_number) %>%
-  summarize(ret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), Mkt.RF = mean(Mkt.RF), SMB = mean(SMB), HML = mean(HML), RF = mean(RF))
+pf_ret = stoxwe_with_pfs %>%
+  group_by(yw, pf36_name) %>%
+  summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), Mkt.RF = mean(Mkt.RF), SMB = mean(SMB), HML = mean(HML), RF = mean(RF))
 
-kkhml_ret = compustat_sel %>%
+kkhml_ret = stoxwe_with_pfs %>%
   drop_na(topic_kk) %>%
   ungroup() %>%
   group_by(yw, ntile_topic_kk) %>%
-  summarize(ret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE)) %>%
-  pivot_wider(names_from = ntile_topic_kk, names_prefix = "kk", values_from = ret) %>%
+  summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE)) %>%
+  pivot_wider(names_from = ntile_topic_kk, names_prefix = "kk", values_from = eret) %>%
   transmute(yw, kkhml = kk4-kk1)
 
 eret_we = pf_ret %>%
   inner_join(kkhml_ret, by = c("yw")) %>%
-  rename(eretw = ret)  %>%
+  rename(eretw = eret)  %>%
   drop_na() %>%
   ungroup()
 
@@ -219,30 +219,31 @@ formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF
 
 first_stage1 = eret_we %>%
   ungroup() %>%
-  nest_by(pf_number) %>%
+  nest_by(pf36_name) %>%
   mutate(mod = list(lm(formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF, data = data))) %>%
   summarize(eretw = mean(data$eretw), t = length(data$eretw), tidy(mod)) 
 
 get_sigmae = first_stage1 %>%
   mutate(sigmae = t*std.error^2) %>%
   filter(term == "(Intercept)") %>%
-  select(pf_number, sigmae) %>%
+  select(pf36_name, sigmae) %>%
   drop_na()
 
 first_stage2 = first_stage1 %>%
   select(-std.error, -statistic, -p.value) %>%
   pivot_wider(names_from = term, values_from = estimate) %>%
-  full_join(get_sigmae, by = c("pf_number")) %>%
+  full_join(get_sigmae, by = c("pf36_name")) %>%
   drop_na()
 
 second_stage_ols = lm(formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF, data = first_stage2)
-second_stage_wls = lm(formula3ff, data = first_stage2, weights = first_stage2$sigmae)
+second_stage_wls = lm(formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF, data = first_stage2, weights = first_stage2$sigmae)
+
 summary(second_stage_ols)
 summary(second_stage_wls)
 
 latex_table <- stargazer(second_stage_ols, second_stage_wls, title = "Regression Summary", align = TRUE, out = paste0(figfolder, "summary_table.tex"))
 
-we_ret_bybin = compustat_sel %>%
+we_ret_bybin = stoxwe_with_pfs %>%
   mutate(ntile_topic_kk = factor(ntile_topic_kk)) %>%
   group_by(yw, ntile_topic_kk) %>%
   summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), sderet = sd(eretw, na.rm = TRUE)) %>%
@@ -269,7 +270,7 @@ ggsave(paste0(figfolder, "awawr.jpg"), plot = last_plot(), dpi = 300)
 ggplot(we_ret_bybin %>% filter(ntile_topic_kk %in% c(1,4)) , aes(x = yw, y = sderet, col = ntile_topic_kk)) + geom_line() + labs(x = "Year-month", y = "(Non-asset-weighted) weekly standard deviation of returns")
 ggsave(paste0(figfolder, "wsdr.jpg"), plot = last_plot(), dpi = 300)
 
-we_ret_bygroup = compustat_sel %>%
+we_ret_bygroup = stoxwe_with_pfs %>%
   mutate(max_topic = factor(max_topic)) %>%
   group_by(yw, max_topic) %>%
   summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), sderet = sd(eretw, na.rm = TRUE)) %>%

@@ -119,8 +119,6 @@ stox = stoxda_p2005sampled_sh %>%
   filter(crit_ALL == 1) %>%
   left_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) 
 
-### Skewness analysis
-
 stox_by_kk = stox %>%
   mutate(ym = y) %>%
   group_by(ym, PERMNO) %>%
