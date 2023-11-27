@@ -429,5 +429,52 @@ kurtosis_graph <- function(stoxda, cequity_mapper, topic_map){
   ggsave(paste0(figfolder, "kurtosis_ntile.jpg"), plot = last_plot(), dpi = 300)
 }
 
+getFiscalYear <- function(week) {
+  year <- week %/% 100 # Extract the year part
+  week_num <- week %% 100 # Extract the week part
+  
+  if (week_num > 26) {
+    year <- year + 1
+  }
+  
+  return(year)
+}
+
+attributePortfolios <- function(stoxwe){
+  stoxwe_add = stoxwe %>%
+    mutate(fiscalyear = sapply(yw, getFiscalYear)) %>%
+    mutate(mb = (csho*prcc_f)/ceq, 
+           me = csho*prcc_f,
+           kk_share = K_int_Know/ppegt,
+           CUSIP8 = str_sub(cusip, 1, -2))
+  
+  pfs = stoxwe_add %>%
+    filter(yw%%100 == 26)  %>%
+    select(-cusip) %>%
+    group_by(y) %>%
+    drop_na(me, mb) %>%
+    mutate(med_NYSE_me = median(me[exchg == 11], na.rm = TRUE)) %>%
+    mutate(med_NYSE_mb70p = quantile(mb[exchg == 11], prob = 0.7, na.rm = TRUE)) %>%
+    mutate(med_NYSE_mb30p = quantile(mb[exchg == 11], prob = 0.3, na.rm = TRUE)) %>%
+    ungroup() %>%
+    mutate(me_group = ifelse(me < med_NYSE_me, 1, 2),
+           mb_group = case_when(mb < med_NYSE_mb30p ~ 1,
+                                mb >= med_NYSE_mb30p & mb <= med_NYSE_mb70p ~ 2,
+                                mb > med_NYSE_mb70p ~ 3)) %>%
+    select(-med_NYSE_me, -med_NYSE_mb30p, -med_NYSE_mb70p) %>%
+    mutate(pf6_name = 10*me_group+mb_group)%>%
+    group_by(y) %>%
+    mutate(pf25_name = 10*ntile(me, 5) + ntile(mb, 5)) %>%
+    mutate(pf36_name = 100*ntile_topic_kk + 10*ntile(me, 3) + ntile(mb, 3)) %>% 
+    ungroup() %>%
+    select(gvkey, pf36_name, pf6_name, pf25_name, fiscalyear) %>%
+    mutate(fiscalyear = fiscalyear+1)
+  
+  stoxwe_add = stoxwe_add %>%
+    inner_join(pfs, by = c("fiscalyear", "gvkey"))
+  
+  return(stoxwe_add)
+}
+
 
 

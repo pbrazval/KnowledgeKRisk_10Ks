@@ -20,7 +20,7 @@
   University of California, Santa Cruz
  }
 
-\newcommand{\ffo}{dicfullmc10thr10defnob5noa0_8_4t}
+\newcommand{\ffo}{dicfullmc10thr10defnob40noa1_4t}
 \newcommand{\ffoiii}{dicfullmc10thr10defnob5noa0_8_3t}
 \newcommand{\ffovi}{dicfullmc10thr10defnob5noa0_8_6t}
 
@@ -83,13 +83,25 @@
 \item Knowledge capital differs from physical capital in terms of its risk profile:
 \begin{itemize}
 \item It incurs higher adjustment costs (Belo et al., 2019), experiences greater depreciation (Li et al., 2020), and is subject to factors such as obsolescence and patent breaks.
-\item The outcomes of R\&D investments are uncertain, leading to increased volatility in cash flows (Andrei et al., 2019).
 \end{itemize}
-
-
-
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+\begin{itemize}	
+\item Knowledge capital differs from physical capital in terms of its risk profile (2):
+\begin{itemize}
+\item The cash flow $\theta_t$ in a knowledge-heavy firm can be seen as a stochastic process with innovation jumps: \citep{Andrei2019-bh}  
+\begin{equation}
+	d \theta_t=\lambda\left(\bar{\mu}-\theta_t\right) d t+\sigma_\theta d W_t^\theta+J d N_t, 
+\end{equation}
+where $\bar{\mu}$ is the mean profitability, $W_t^\theta$ is a Wiener process, and $J \sim Poisson(f(\Phi))$, where the firm chooses R\&D expenses $\Phi$
+\item Do innovation jumps have an effect on stock returns?
+\end{itemize}
+\end{itemize}
+\end{frame}
+
 
 
 \begin{frame}
@@ -123,18 +135,27 @@
 
 \section{Data}
 
+
 \begin{frame}
 \frametitle{Latent Dirichlet Allocation (LDA)}
 \begin{itemize}
 \small
-\item LDA is a generative statistical model widely used for topic modelling in natural language processing (NLP).
+\item LDA is a generative statistical model widely used for topic modeling in natural language processing (NLP).
 \item It operates under the assumption that each document in a corpus is a mixture of a number of latent topics $k \in \{1, ..., K\}$, with weights $\omega_{i1}, ..., \omega_{iK}$. Each topic is assigned a word probability vector $\mathbf{\theta}_k$. 
 \item Therefore, if $X_i$ is the vector of word counts with length $n_i$, 
 \begin{equation}
 X_i \sim \operatorname{Multinomial}\left(n_i, \omega_{i 1} \theta_1+\cdots+\omega_{i K} \theta_K\right)
 \end{equation}
 \item The output of LDA is a list of topics, each represented as a collection of words, and a weight distribution across these topics for each document.
-\item LDA is an unsupervised learning method, meaning that it learns and infers from the data without any predefined labels.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why LDA?}
+\begin{itemize}
+\item Other algorithmic text analysis methods used for concept detection include (Ash and Hansen, 2023) dictionary methods, word embeddings, and supervised methods
+\item LDA is an unsupervised learning method, meaning that it learns and infers from the data without any predefined labels. Topics generated cannot be targeted towards specific concepts
+\item LDA allows for concept exploration without imposing strong priors about the dictionary used and without relying on subjective human labeling, while often creating interpretable topics.
 \end{itemize}
 \end{frame}
 
@@ -156,8 +177,8 @@ X_i \sim \operatorname{Multinomial}\left(n_i, \omega_{i 1} \theta_1+\cdots+\omeg
 \begin{frame}
 \frametitle{Downloading 10-Ks and extracting risk factors}
 \begin{itemize}
-\item Downloaded from the SEC website 121,839 firm 10-Ks, filed from 2006 to 2022, resulting in approximately 1.6 TB of data. Each 10-K is stored as raw HTML code
-\item Extracted the Item 1A (Risk Factors) section from the tree-like structure of each 10-K.
+\item Downloaded from the SEC website 121,839 firm 10-Ks, filed from 2006 to 2022, resulting in approximately 1.6 TB of data. 
+\item Extracted the Item 1A (Risk Factors) section from the tree-like structure (XML) of each 10-K.
 \item Parsed the text from the Item 1A section using \texttt{BeautifulSoup}; removed punctuation and numbers.
 \end{itemize}
 \end{frame}
@@ -181,28 +202,16 @@ X_i \sim \operatorname{Multinomial}\left(n_i, \omega_{i 1} \theta_1+\cdots+\omeg
 \item Reporting risk factors is mandatory for most firms, but there are exceptions for asset-backed issuers and smaller reporting companies.
 \item Asset-backed issuers are defined as issuers whose reporting obligation arises from the registration of an offering of asset-backed securities under the Securities Act or the registration of a class of asset-backed securities.
 \item Firms that are not required to disclose risk factors may leave Item 1A empty or write a placeholder text indicating that they are not required to disclose risk factors due to their nature.
-\item This leads to a high frequency of 10-K filings with a significantly low number of words, as shown in Figure \ref{fig:cdf}. In the subsequent stages, 1A texts with an insufficient word count (less than 200 words) are discarded.
+\item This leads to a high frequency of 10-K filings with a significantly low number of words, as shown in Figure \ref{fig:cdf}. In the subsequent stages, 1A texts with an insufficient word count (less than 200 words) are discarded \hyperlink{min_words}{\beamerbutton{Details}}.
 
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Filtering firms (3)}
-\begin{figure}
-  \centering
-  \subfloat[Full picture]{\includegraphics[width=0.45\textwidth]{cdf_words}\label{fig:cdf_words}}
-  \hfill
-  \subfloat[Detail]{\includegraphics[width=0.45\textwidth]{cdf_words_zoom}\label{fig:cdf_words_zoom}}
-  \caption{Word count cumulative distribution function, for all 10-Ks filed in 2022}
-  \label{fig:cdf}
-\end{figure}
-\end{frame}
 
 \begin{frame}
 \frametitle{Filtering firms (4)}
 \scriptsize
 \input{\ffo/file_counts.tex}
-
 \end{frame}
 
 
@@ -220,16 +229,13 @@ X_i \sim \operatorname{Multinomial}\left(n_i, \omega_{i 1} \theta_1+\cdots+\omeg
 \begin{frame}
 \frametitle{Establishing N-grams and Constructing the Dictionary}
 \label{ngram_main}
-\small	
 \begin{itemize}
-\item N-grams, defined as groupings of $n$ words appearing together at an unusually high frequency, serve as crucial linguistic units. Examples include phrases like ``New York",``patent application", and "research and development".
-\item Utilizing the \texttt{gensim} Python library, I identified n-grams with a length of up to three words within each text, dated from 2006 onwards. These n-grams will be subsequently treated as distinct "words".
-\item From the ensemble of these n-gramized texts, I constructed a dictionary. To avoid an overly lengthy dictionary, I adopted the following strategies:
-\begin{itemize}
-  \item N-grams were only included as unique words if they achieved a certain threshold frequency. For more information, please refer to \hyperlink{ngram_details}{\beamerbutton{Details}}.
-  \item Words were only incorporated into the dictionary if they were featured in a minimum of 10 documents.
-\end{itemize}
-\item The final version of my dictionary comprises 102,850 unique words.
+\item N-grams are defined as groupings of $n$ words appearing together at an unusually high frequency. Examples include phrases like ``New York",``patent application", and `research and development".\hyperlink{ngram_details}{\beamerbutton{Details}}
+
+\item I identified n-grams for $n \leq 3$. For dictionary and bag-of-words purposes, n-grams are treated as distinct words
+\item I constructed a dictionary from the ensemble of n-gramized texts. Words were only incorporated into the dictionary if they were featured in a minimum of 0.1\% of all documents.
+
+\item The final version of my dictionary comprises 25,022 unique words.
 \end{itemize}
 \normalsize
 \end{frame}
@@ -287,10 +293,11 @@ X_i \sim \operatorname{Multinomial}\left(n_i, \omega_{i 1} \theta_1+\cdots+\omeg
 
 \end{frame}
 
-\begin{frame}
-  \frametitle{Distribution of topic\_kk}
-  \insertfigure{topickk_distr.png}{The histogram bars represent the frequency of topic\_kk values, while the red dashed lines indicate the quartile dividers. }
-\end{frame}
+% Need to add:
+%\begin{frame}
+%  \frametitle{Distribution of topic\_kk}
+%  \insertfigure{topickk_distr.png}{The histogram bars represent the frequency of topic\_kk values, while the red dashed lines indicate the quartile dividers. }
+%\end{frame}
 
 
 \begin{frame}
@@ -398,6 +405,19 @@ X_i \sim \operatorname{Multinomial}\left(n_i, \omega_{i 1} \theta_1+\cdots+\omeg
 \insertfigure{mean_tiy}{Mean Topic Intensity by Year}
 \end{frame}
 
+
+\begin{frame}
+\frametitle{Filtering firms (3)}
+\label{min_words}
+\begin{figure}
+  \centering
+  \subfloat[Full picture]{\includegraphics[width=0.45\textwidth]{cdf_words}\label{fig:cdf_words}}
+  \hfill
+  \subfloat[Detail]{\includegraphics[width=0.45\textwidth]{cdf_words_zoom}\label{fig:cdf_words_zoom}}
+  \caption{Word count cumulative distribution function, for all 10-Ks filed in 2022}
+  \label{fig:cdf}
+\end{figure}
+\end{frame}
 
 \begin{frame}
 \frametitle{Title}

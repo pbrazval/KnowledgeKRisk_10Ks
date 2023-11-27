@@ -173,30 +173,8 @@ if(print_kurtosis){
 # CLEANING COMP_FUNDA AND PETERSTAYLOR
 print("Creating stoxwe_with_pfs...")
 
-stoxwe_with_pfs = stoxwe %>%
-  mutate(mb = (csho*prcc_f)/ceq, 
-         me = csho*prcc_f,
-         kk_share = K_int_Know/ppegt,
-         CUSIP8 = str_sub(cusip, 1, -2)) %>%
-  select(-cusip) %>%
-  group_by(y) %>%
-  drop_na(me, mb) %>%
-  mutate(med_NYSE_me = median(me[exchg == 11], na.rm = TRUE)) %>%
-  mutate(med_NYSE_mb70p = quantile(mb[exchg == 11], prob = 0.7, na.rm = TRUE)) %>%
-  mutate(med_NYSE_mb30p = quantile(mb[exchg == 11], prob = 0.3, na.rm = TRUE)) %>%
-  ungroup() %>%
-  mutate(me_group = ifelse(me < med_NYSE_me, 1, 2),
-         mb_group = case_when(mb < med_NYSE_mb30p ~ 1,
-                         mb >= med_NYSE_mb30p & mb <= med_NYSE_mb70p ~ 2,
-                         mb > med_NYSE_mb70p ~ 3)) %>%
-  select(-med_NYSE_me, -med_NYSE_mb30p, -med_NYSE_mb70p) %>%
-  mutate(pf6_name = 10*me_group+mb_group)%>%
-  group_by(y) %>%
-  mutate(pf25_name = 10*ntile(me, 5) + ntile(mb, 5)) %>%
-  mutate(pf36_name = 100*ntile_topic_kk + 10*ntile(me, 3) + ntile(mb, 3)) %>%
-  group_by(yw) %>%
-  ungroup()
-
+stoxwe_with_pfs = attributePortfolios(stoxwe)
+  
 pf_ret = stoxwe_with_pfs %>%
   group_by(yw, pf36_name) %>%
   summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), Mkt.RF = mean(Mkt.RF), SMB = mean(SMB), HML = mean(HML), RF = mean(RF))
