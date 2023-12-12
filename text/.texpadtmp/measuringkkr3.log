@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.17)  24 NOV 2023 10:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.17)  1 DEC 2023 19:23
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -435,84 +435,4 @@ Overfull \hbox (1.74112pt too wide) in paragraph at lines 271--272
 <dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png, id=266, 3011.25pt x 2409.0pt>
 File: dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png Graphic file (type png)
 <use dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png  used on input line 275.
-(pdftex.def)             Requested size: 328.82707pt x 263.04263pt.
-[14 <./dicfullmc10thr10defnob5noa0_8_4t/heatmap.png>]
-<dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png, id=274, 3011.25pt x 2409.0pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png Graphic file (type png)
-<use dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png  used on input line 277.
-(pdftex.def)             Requested size: 328.82707pt x 263.04263pt.
-<dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png, id=276, 3011.25pt x 2409.0pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png Graphic file (type png)
-<use dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png  used on input line 281.
-(pdftex.def)             Requested size: 328.82707pt x 263.04263pt.
- [15 <./dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png> <./dicfullmc10thr10defnob5noa0_8_4t/heatmap_patents.png>]
-<dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg, id=285, 1162.3425pt x 1249.66875pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg Graphic file (type jpg)
-<use dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg  used on input line 291.
-(pdftex.def)             Requested size: 328.82707pt x 353.52786pt.
- [16 <./dicfullmc10thr10defnob5noa0_8_4t/topicvskkpt_hm.png>]
-<dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg, id=293, 1162.3425pt x 1249.66875pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg Graphic file (type jpg)
-<use dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg  used on input line 295.
-(pdftex.def)             Requested size: 328.82707pt x 353.52786pt.
- [17 <./dicfullmc10thr10defnob5noa0_8_4t/awawr.jpg>]
-<dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg, id=301, 1162.3425pt x 1249.66875pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg Graphic file (type jpg)
-<use dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg  used on input line 299.
-(pdftex.def)             Requested size: 328.82707pt x 353.52786pt.
- [18 <./dicfullmc10thr10defnob5noa0_8_4t/awawr_aggind.jpg>]
-<dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg, id=308, 1162.3425pt x 1249.66875pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg Graphic file (type jpg)
-<use dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg  used on input line 303.
-(pdftex.def)             Requested size: 328.82707pt x 353.52786pt.
- [19 <./dicfullmc10thr10defnob5noa0_8_4t/awawr_byg.jpg>]
-Overfull \hbox (4.52408pt too wide) in paragraph at lines 309--310
-\OT1/ppl/m/n/12 ex-am-ple, a prior for $\OML/zplm/m/it/12 Topic[]$ \OT1/ppl/m/n/12 could be im-posed, com-pris-ing spe-cific words such as ``patents"
- []
-
-(/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.bbl [20 <./dicfullmc10thr10defnob5noa0_8_4t/wsdr_byg.jpg>]
-Underfull \hbox (badness 2644) in paragraph at lines 50--51
-[]\OT1/ppl/m/n/12 Eisfeldt, An-drea L, Ed-ward Kim, and Dim-itris Pa-paniko-laou (2020) ``In-tan-gi-ble
- []
-
-[21] [22])
-<cdf_words.png, id=331, 462.528pt x 346.896pt>
-File: cdf_words.png Graphic file (type png)
-<use cdf_words.png>
-Package pdftex.def Info: cdf_words.png  used on input line 344.
-(pdftex.def)             Requested size: 211.38832pt x 158.54192pt.
-<cdf_words_zoom.png, id=332, 462.528pt x 346.896pt>
-File: cdf_words_zoom.png Graphic file (type png)
-<use cdf_words_zoom.png>
-Package pdftex.def Info: cdf_words_zoom.png  used on input line 351.
-(pdftex.def)             Requested size: 211.38832pt x 158.54192pt.
- [23] [24 <./cdf_words.png> <./cdf_words_zoom.png>] (/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.aux)
-
-LaTeX Warning: There were undefined references.
-
-Package rerunfilecheck Info: File `measuringkkr3.out' has not changed.
-(rerunfilecheck)             Checksum: BE083113990F88B7F31CD100996F11EF;1914.
- ) 
-Here is how much of TeX's memory you used:
- 11792 strings out of 476025
- 203870 string characters out of 5790017
- 1863388 words of memory out of 5000000
- 31949 multiletter control sequences out of 15000+600000
- 548457 words of font info for 121 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 75i,16n,77p,1060b,601s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/mathpazo/fplmri.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on "/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.pdf" (24 pages, 1927161 bytes).
-PDF statistics:
- 402 PDF objects out of 1000 (max. 8388607)
- 333 compressed objects within 4 object streams
- 88 named destinations out of 1000 (max. 500000)
- 167 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.p

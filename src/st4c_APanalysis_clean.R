@@ -22,6 +22,7 @@ print_kurtosis = FALSE
 
 ## Loading all csvs -----------
 patent_ik_orig <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/KPSS_2020_public.csv")
+amazon_nov01_short <- read.csv("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/amazon_nov01_short.csv")
 cequity_mapper <- read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/cequity_mapper.csv")
 ff3fw_orig = read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/ff3fw.csv")
 ff5fw_orig = read.csv("~/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/ff5fw.csv") 
@@ -36,6 +37,8 @@ load("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring kno
 stoxwe_orig = stoxwe_post2005short
 load("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/stoxmo_post2000short.Rdata")
 load("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/stoxda_post2005veryshort.Rdata")
+comparison_measures <- read.csv("~/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/comparison_measures.csv")
+
 stoxda_orig = stoxwe_post2005short
 
 ## Defining source of stocks information -----------
@@ -43,6 +46,12 @@ stoxmo_orig = stoxmo_post2000short
 
 ## Recreating equity mapper. May be commented for speed
 cequity_mapper = redo_equity_mapper(comp_funda2, figfolder)
+
+## Creating Amazon graph for motivation
+amazon_graph(amazon_nov01_short, figfolder)
+
+## Create Stargazer comparison of measures
+stargaze_comparison(comparison_measures, figfolder)
 
 ## Cleaning dataframes --------
 print("Cleaning dataframes.")
@@ -94,6 +103,9 @@ ff5fw <- ff5fw_orig %>%
   summarize(across(.cols = everything(), sum)) %>%
   ungroup()
 
+expandgrid = expand.grid(YEAR = 2014:2022, naics4 = unique(skilldata_orig %>% filter(YEAR == 2013) %>% pull(ind))) %>%
+  rename(year = YEAR) 
+
 skilldata <- skilldata_orig %>%
   rename(naics4 = ind) %>%
   rename(year = YEAR) %>%
@@ -102,8 +114,6 @@ skilldata <- skilldata_orig %>%
   group_by(naics4) %>%
   fill("Skill", .direction = "down") %>%
   ungroup()
-
-expandgrid = expand.grid(YEAR = 2014:2022, naics4 = unique(skilldata %>% filter(year == 2013) %>% pull(naics4))) 
 
 ## Creating topic_map --------
 compustat_pt = comp_funda2 %>%
@@ -140,7 +150,14 @@ labels[[1]] <- paste("topic", k, sep = "_")
 labels[[2]] <- as.character(k)
 quantiles = 4
 
-topic_map = understand_topics(topic_map_unlabeled, labels, quantiles, figfolder) 
+topic_map_labeled = topic_map_unlabeled
+
+names(topic_map_labeled)[names(topic_map_labeled) == "topic_0"] <- "topic_kk"
+names(topic_map_labeled)[names(topic_map_labeled) == "topic_1"] <- "topic_finl"
+names(topic_map_labeled)[names(topic_map_labeled) == "topic_2"] <- "topic_sw"
+names(topic_map_labeled)[names(topic_map_labeled) == "topic_3"] <- "topic_rawm"
+
+topic_map = understand_topics(topic_map_labeled, labels, quantiles, figfolder) 
  # %>%select(-K_int_Know, -K_int) #removed 2023'11'25
 
 stoxmo = stoxmo_orig %>%
@@ -214,12 +231,13 @@ first_stage2 = first_stage1 %>%
   drop_na()
 
 second_stage_ols = lm(formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF, data = first_stage2)
+second_stage_wls_nokk = lm(formula3ff <- eretw ~ HML + SMB + Mkt.RF, data = first_stage2, weights = first_stage2$sigmae)
 second_stage_wls = lm(formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF, data = first_stage2, weights = first_stage2$sigmae)
 
 summary(second_stage_ols)
 summary(second_stage_wls)
 
-latex_table <- stargazer(second_stage_ols, second_stage_wls, title = "Regression Summary", align = TRUE, out = paste0(figfolder, "summary_table.tex"))
+latex_table <- stargazer(second_stage_wls, second_stage_wls_nokk, title = "Regression Summary", align = TRUE, out = paste0(figfolder, "summary_table.tex"), dep.var.labels = c("Average returns"))
 
 we_ret_bybin = stoxwe_with_pfs %>%
   mutate(ntile_topic_kk = factor(ntile_topic_kk)) %>%
@@ -236,17 +254,42 @@ qt_ret_bygroup = we_ret_bybin %>%
 
 ggplot(we_ret_bybin, aes(x = yw, y = eret, col = ntile_topic_kk)) +
   geom_line() +
-  labs(x = "Year-month", y = "Asset-weighted weekly returns")
-ggsave(paste0(figfolder, "awwr.jpg"), plot = last_plot(), dpi = 300)
+  labs(x = "Year-month", y = "Asset-weighted weekly returns")+
+  theme(
+    legend.text = element_text(size = 14),  # Adjust legend font size
+    axis.text = element_text(size = 14)     # Adjust axis label font size
+  )
+ggsave(paste0(figfolder, "awwr.jpg"), plot = last_plot(), dpi = 600)
+
 ggplot(qt_ret_bygroup, aes(x = yw, y = eret3ma, col = ntile_topic_kk)) + geom_line()  +
-  labs(x = "Year-month", y = "Asset-weighted weekly returns, 3MA") 
-ggsave(paste0(figfolder, "awwr3ma.jpg"), plot = last_plot(), dpi = 300)
+  labs(x = "Year-month", y = "Asset-weighted weekly returns, 3MA") +
+  theme(
+    legend.text = element_text(size = 14),  # Adjust legend font size
+    axis.text = element_text(size = 14)     # Adjust axis label font size
+  )
+ggsave(paste0(figfolder, "awwr3ma.jpg"), plot = last_plot(), dpi = 600)
+
 ggplot(we_ret_bybin , aes(x = yw, y = eret_accum, col = ntile_topic_kk)) +
   geom_line() +
-  labs(x = "Year-month", y = "Asset-weighted accumulated weekly returns")
-ggsave(paste0(figfolder, "awawr.jpg"), plot = last_plot(), dpi = 300)
-ggplot(we_ret_bybin %>% filter(ntile_topic_kk %in% c(1,4)) , aes(x = yw, y = sderet, col = ntile_topic_kk)) + geom_line() + labs(x = "Year-month", y = "(Non-asset-weighted) weekly standard deviation of returns")
-ggsave(paste0(figfolder, "wsdr.jpg"), plot = last_plot(), dpi = 300)
+  labs(x = "Year-month", y = "Asset-weighted accumulated weekly returns")+
+  theme(
+    legend.text = element_text(size = 14),  # Adjust legend font size
+    axis.text = element_text(size = 14)     # Adjust axis label font size
+  )
+ggsave(paste0(figfolder, "awawr.jpg"), plot = last_plot(), dpi = 600)
+we_ret_bybin_filt = we_ret_bybin %>% 
+  filter(ntile_topic_kk %in% c(1,4)) %>%
+  group_by(ntile_topic_kk) %>%
+  mutate(moving_average = (lag(sderet, order_by = yw) 
+                           + lag(sderet, order_by = yw, n = 2) + lag(sderet, order_by = yw, n = 3) 
+                           + sderet) / 4)
+
+ggplot(we_ret_bybin_filt, aes(x = yw, y = moving_average, col = ntile_topic_kk)) + geom_line() + labs(x = "Year-month", y = "Weekly standard deviation of returns by n-tile, four-week MA")+
+  theme(
+    legend.text = element_text(size = 14),  # Adjust legend font size
+    axis.text = element_text(size = 14)     # Adjust axis label font size
+  )
+ggsave(paste0(figfolder, "wsdr.jpg"), plot = last_plot(), dpi = 600)
 
 we_ret_bygroup = stoxwe_with_pfs %>%
   mutate(max_topic = factor(max_topic)) %>%
@@ -264,16 +307,33 @@ qt_ret_bygroup = we_ret_bygroup %>%
 
 ggplot(we_ret_bygroup, aes(x = yw, y = eret, col = max_topic)) +
   geom_line() +
-  labs(x = "Year-month", y = "Asset-weighted weekly returns")
-ggsave(paste0(figfolder, "awwr_byg.jpg"), plot = last_plot(), dpi = 300)
+  labs(x = "Year-month", y = "Asset-weighted weekly returns")+
+  theme(
+    legend.text = element_text(size = 14),  # Adjust legend font size
+    axis.text = element_text(size = 14)     # Adjust axis label font size
+  )
+ggsave(paste0(figfolder, "awwr_byg.jpg"), plot = last_plot(), dpi = 600)
 ggplot(qt_ret_bygroup, aes(x = yw, y = eret3ma, col = max_topic)) + geom_line()  +
-  labs(x = "Year-month", y = "Asset-weighted weekly returns, 3MA") 
-ggsave(paste0(figfolder, "awwr3ma_byg.jpg"), plot = last_plot(), dpi = 300)
+  labs(x = "Year-month", y = "Asset-weighted weekly returns, 3MA") +
+  theme(
+    legend.text = element_text(size = 14),  # Adjust legend font size
+    axis.text = element_text(size = 14)     # Adjust axis label font size
+  )
+ggsave(paste0(figfolder, "awwr3ma_byg.jpg"), plot = last_plot(), dpi = 600)
 ggplot(we_ret_bygroup, aes(x = yw, y = eret_accum, col = max_topic)) +
   geom_line() +
-  labs(x = "Year-month", y = "Asset-weighted accumulated weekly returns")
-ggsave(paste0(figfolder, "awawr_byg.jpg"), plot = last_plot(), dpi = 300)
+  labs(x = "Year-month", y = "Asset-weighted accumulated weekly returns")+
+  theme(
+    legend.text = element_text(size = 14),  # Adjust legend font size
+    axis.text = element_text(size = 14)     # Adjust axis label font size
+  )
+ggsave(paste0(figfolder, "awawr_byg.jpg"), plot = last_plot(), dpi = 600)
 ggplot(we_ret_bygroup , aes(x = yw, y = sderet, col = max_topic)) +
   geom_line() +
-  labs(x = "Year-month", y = "(Non-asset-weighted) weekly standard deviation of returns")
-ggsave(paste0(figfolder, "wsdr_byg.jpg"), plot = last_plot(), dpi = 300)
+  labs(x = "Year-month", y = "(Non-asset-weighted) weekly standard deviation of returns")+
+  theme(
+    legend.text = element_text(size = 14),  # Adjust legend font size
+    axis.text = element_text(size = 14)     # Adjust axis label font size
+  )
+ggsave(paste0(figfolder, "wsdr_byg.jpg"), plot = last_plot(), dpi = 600)
+

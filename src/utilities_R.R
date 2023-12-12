@@ -65,9 +65,13 @@ create_topic_plots <- function(df, figfolder) {
     geom_line() +
     labs(x = "Year", y = "Topic Intensity", title = "Mean Topic Intensity by Year") +
     scale_color_discrete(name = "Topic") +
-    theme(plot.title = element_text(hjust = 0.5))
+    theme(plot.title = element_text(hjust = 0.5))+
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(size = 14)     # Adjust axis label font size
+    )
   
-  ggsave(paste0(figfolder, "mean_tiy.jpg"), plot = last_plot(), dpi = 300)
+  ggsave(paste0(figfolder, "mean_tiy.jpg"), plot = last_plot(), dpi = 600)
 }
 
 find_k <- function(topic_map){
@@ -86,15 +90,14 @@ odds <- function(p){
 }
 
 
-understand_topics <- function(topic_map, labels, quantiles, textfolder){
+understand_topics <- function(topic_map_labeled, labels, quantiles, textfolder){
   print("Understanding topics...")
   # results = find_k(topic_map)
-  topic_k = labels[[1]]
-  k = labels[[2]]
+  # topic_k = labels[[1]]
+  # k = labels[[2]]
   nt = quantiles
   
-  topic_map = topic_map %>%
-    rename(topic_kk = !!sym(topic_k)) %>%
+  topic_map = topic_map_labeled %>% #rename(topic_kk = !!sym(topic_k)) %>%
     group_by(year) %>%
     mutate(ntile_topic_kk = ntile(topic_kk, nt)) %>%
     mutate(kkpt_ntile = ntile(K_int_Know/at, nt)) %>%
@@ -103,13 +106,24 @@ understand_topics <- function(topic_map, labels, quantiles, textfolder){
   
   create_topic_plots(topic_map, textfolder)  
   
-  bytech = topic_map %>%
+  bytech = topic_map_labeled %>%
+    drop_na(hi_tech) %>%
     group_by(hi_tech) %>%
-    summarize(across(starts_with('topic'), ~ round(mean(.x),2)))
+    summarize(across(starts_with('topic'), ~ round(mean(.x),3)))
   
   stargazer(bytech, title = "Topic averages by hi-tech status", 
             align = TRUE, header = FALSE, 
             summary = FALSE, rownames = FALSE, digit.separator = "", label = "fig:bytech", out = paste0(textfolder, "tpcavg_tech", ".tex"))  
+  
+  set.seed(139)
+  sample_topics = topic_map_labeled %>%
+    select(conm, year, starts_with("topic_")) %>%
+    sample_n(10) %>%
+    arrange(conm) %>%
+    rename(Company_Name = conm) %>%
+    mutate_at(vars(grep("^topic_", names(.))), ~round(., 3))
+  
+  stargazer(sample_topics, title = "Sample of a topic map", align = TRUE, header = FALSE, summary = FALSE, rownames = FALSE, digit.separator = "", out = paste0(textfolder, "sample_map", ".tex"))  
   
   skillcor = topic_map %>%
     select(starts_with("topic"), "Skill")
@@ -118,10 +132,14 @@ understand_topics <- function(topic_map, labels, quantiles, textfolder){
   
   heatmap <- ggplot(cor_matrix, aes(Var1, Var2)) +    # Create default ggplot2 heatmap
     geom_tile(aes(fill = value)) + 
-    geom_text(aes(label = round(value,2))) + 
-    scale_fill_gradient2(low = "red", mid = "white", high = "blue", midpoint = 0)
+    geom_text(aes(label = round(value,3))) + 
+    scale_fill_gradient2(low = "red", mid = "white", high = "blue", midpoint = 0)+
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(size = 14)     # Adjust axis label font size
+    )
   
-  ggsave(paste0(textfolder, "heatmap.png"), plot = heatmap, width = 10, height = 8, dpi = 300)
+  ggsave(paste0(textfolder, "heatmap.png"), plot = heatmap, dpi = 600)
   
   patentcor = topic_map %>%
     select(starts_with("topic"), "xir_cumsum") 
@@ -133,10 +151,14 @@ understand_topics <- function(topic_map, labels, quantiles, textfolder){
   
   heatmap <- ggplot(patentcor_matrix, aes(Var1, Var2)) +    # Create default ggplot2 heatmap
     geom_tile(aes(fill = value)) + 
-    geom_text(aes(label = round(value,2))) + 
-    scale_fill_gradient2(low = "red", mid = "white", high = "blue", midpoint = 0)
+    geom_text(aes(label = round(value,3))) + 
+    scale_fill_gradient2(low = "red", mid = "white", high = "blue", midpoint = 0)+
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(size = 14)     # Adjust axis label font size
+    )
   
-  ggsave(paste0(textfolder, "heatmap_patents.png"), plot = heatmap, width = 10, height = 8, dpi = 300)
+  ggsave(paste0(textfolder, "heatmap_patents.png"), plot = heatmap, dpi = 600)
   
   firms_by_ind = topic_map %>%
     filter(ntile_topic_kk == nt) %>%
@@ -155,8 +177,11 @@ understand_topics <- function(topic_map, labels, quantiles, textfolder){
     ylab("Share of all dominant-KK firms") +
     xlab("Year") +
     labs(fill = "Industry")  +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ggsave(paste0(textfolder, "stackedplot_n.png"), plot = stackedplot_n, width = 10, height = 8, dpi = 300)
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(angle = 45, hjust = 1,size = 14)     # Adjust axis label font size
+    )
+  ggsave(paste0(textfolder, "stackedplot_n.png"), plot = stackedplot_n, dpi = 600)
   
   stackedplot_at <- ggplot(firms_by_ind, aes(x = factor(year), y = totalat, fill = ind12)) +
     geom_bar(stat = "identity") +
@@ -164,10 +189,13 @@ understand_topics <- function(topic_map, labels, quantiles, textfolder){
     ylab("Share of all dominant-KK firms") +
     xlab("Year") +
     labs(fill = "Industry")  +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(angle = 45, hjust = 1, size = 14)     # Adjust axis label font size
+    )
   stackedplot_at
   
-  ggsave(paste0(textfolder, "stackedplot_at.png"), plot = stackedplot_at, width = 10, height = 8, dpi = 300)
+  ggsave(paste0(textfolder, "stackedplot_at.png"), plot = stackedplot_at, dpi = 600)
   
   firms_by_kk = topic_map %>%
     drop_na(ntile_topic_kk, kkpt_ntile) %>%
@@ -177,9 +205,15 @@ understand_topics <- function(topic_map, labels, quantiles, textfolder){
   topicvskkpt_hm <- ggplot(firms_by_kk, aes(ntile_topic_kk, kkpt_ntile)) +    # Create default ggplot2 heatmap
     geom_tile(aes(fill = count)) + 
     geom_text(aes(label = round(count,2))) + 
-    scale_fill_gradient2(low = "white", high = "red")
+    scale_fill_gradient2(low = "white", high = "red")+
+    ylab("Quartiles of Knowledge Capital Intensity") +
+    xlab("Quartiles of Knowledge Capital Risk measured by Topic_kk") +
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(size = 14)     # Adjust axis label font size
+    )
   topicvskkpt_hm
-  ggsave(paste0(textfolder, "topicvskkpt_hm.png"), plot = topicvskkpt_hm, width = 10, height = 8, dpi = 300)
+  ggsave(paste0(textfolder, "topicvskkpt_hm.png"), plot = topicvskkpt_hm, dpi = 600)
   
   firms_by_ik = topic_map %>%
     drop_na(ntile_topic_kk, ikpt_ntile) %>%
@@ -189,9 +223,13 @@ understand_topics <- function(topic_map, labels, quantiles, textfolder){
   topicvsikpt_hm <- ggplot(firms_by_ik, aes(ntile_topic_kk, ikpt_ntile)) +    # Create default ggplot2 heatmap
     geom_tile(aes(fill = count)) + 
     geom_text(aes(label = round(count,2))) + 
-    scale_fill_gradient2(low = "white", high = "red")
+    scale_fill_gradient2(low = "white", high = "red")+
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(size = 14)     # Adjust axis label font size
+    )
   
-  ggsave(paste0(textfolder, "topicvsikpt_hm.png"), plot = topicvsikpt_hm, width = 10, height = 8, dpi = 300)
+  ggsave(paste0(textfolder, "topicvsikpt_hm.png"), plot = topicvsikpt_hm, dpi = 600)
   
   mean_topic_kk = topic_map %>%
     group_by(year, ind12) %>%
@@ -199,7 +237,6 @@ understand_topics <- function(topic_map, labels, quantiles, textfolder){
     ungroup() %>%
     pivot_wider(names_from = ind12, names_prefix = "ind", values_from = mean_kk)
 
-  
   return(topic_map)
 }
 
@@ -259,7 +296,11 @@ bollerslev <- function(df){
     geom_line(aes(y = Mbar), color = "red") +
     labs(x = "Date", y = "Values") +
     ggtitle("Line Plot of Cbar, NPbar, and Mbar") +
-    theme_minimal()
+    theme_minimal()+
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(size = 14)     # Adjust axis label font size
+    )
 }  
 
 
@@ -345,41 +386,6 @@ redo_equity_mapper <- function(comp_funda2, textfolder){
   return(cequity_mapper)
 }
 
-analyze_kurtosis <- function(stoxda_orig){
-  
-  topic_map = topic_map %>%
-    group_by(year) %>%
-    mutate(ntile_topic_0 = ntile(topic_0, 4)) 
-  
-  stoxda = stoxda_orig %>%
-    mutate(date = ymd(date)) %>%
-    mutate(y = year(date)) %>%
-    left_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y")) %>%
-    filter(crit_ALL == 1) %>%
-    left_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year")) 
-  
-  stox_by_kkd = stoxda %>%
-    drop_na(RET) %>%
-    group_by(y, PERMNO) %>%
-    summarize(moment = kurtosis(RET), group = mean(ntile_topic_0)) %>%
-    ungroup() %>%
-    filter(group - floor(group) == 0) %>%
-    drop_na(group)
-  
-  stox_by_kk2 = stox_by_kkd %>%
-    group_by(group, y) %>%
-    summarize(moment = mean(moment, na.rm = TRUE)) %>%
-    ungroup() %>%
-    mutate(group = factor(group))
-  
-  ggplot(stox_by_kk2, aes(x = y, y = moment, group = group, color = group)) +
-    geom_line() +
-    labs(x = "y", y = "moment") +
-    scale_color_discrete(name = "group") +
-    theme_minimal()  
-  ggsave(paste0(figfolder, "kurtosis_by_maxtopic.jpg"), plot = last_plot(), dpi = 300)
-}
-
 kurtosis_graph <- function(stoxda, cequity_mapper, topic_map){
   print("Plotting kurtosis graph...")
   stox = stoxda %>%
@@ -399,15 +405,25 @@ kurtosis_graph <- function(stoxda, cequity_mapper, topic_map){
     mutate(group = factor(group)) %>%
     drop_na(group) %>%
     group_by(group, ym) %>%
-    summarize(moment = mean(moment, na.rm = TRUE))
+    summarize(moment = mean(moment, na.rm = TRUE))  %>%
+    mutate(group = case_when(
+      group == 0 ~ "kk",
+      group == 1 ~ "finl",
+      group == 2 ~ "sw",
+      group == 3 ~ "rawm",
+      TRUE ~ as.character(group)))
   
   ggplot(stox_by_kk, aes(x = ym, y = moment, group = group, color = group)) +
     geom_line() +
     labs(x = "y", y = "moment") +
     scale_color_discrete(name = "group") +
-    theme_minimal() 
+    theme_minimal() +
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(size = 14)     # Adjust axis label font size
+    )
   
-  ggsave(paste0(figfolder, "kurtosis_maxtopic.jpg"), plot = last_plot(), dpi = 300)
+  ggsave(paste0(figfolder, "kurtosis_maxtopic.jpg"), plot = last_plot(), dpi = 600)
   
   stox_by_kk = stox %>%
     mutate(ym = y) %>%
@@ -424,9 +440,13 @@ kurtosis_graph <- function(stoxda, cequity_mapper, topic_map){
     geom_line() +
     labs(x = "y", y = "moment") +
     scale_color_discrete(name = "N-tile") +
-    theme_minimal() 
+    theme_minimal() +
+    theme(
+      legend.text = element_text(size = 14),  # Adjust legend font size
+      axis.text = element_text(size = 14)     # Adjust axis label font size
+    )
   
-  ggsave(paste0(figfolder, "kurtosis_ntile.jpg"), plot = last_plot(), dpi = 300)
+  ggsave(paste0(figfolder, "kurtosis_ntile.jpg"), plot = last_plot(), dpi = 600)
 }
 
 getFiscalYear <- function(week) {
@@ -474,6 +494,39 @@ attributePortfolios <- function(stoxwe){
     inner_join(pfs, by = c("fiscalyear", "gvkey"))
   
   return(stoxwe_add)
+}
+
+amazon_graph <- function(amazon_nov01_short, figfolder){
+  amazon_nov01_short <- amazon_nov01_short %>%
+    mutate(Date = as.Date(Date))
+  
+  # Finding the 'nasdaq' and 'amazon' values for the specific date
+  specific_date_values <- amazon_nov01_short %>%
+    filter(Date == as.Date("2001-11-13")) %>%
+    select(nasdaq, amazon)
+  
+  # Divide all the values in 'nasdaq' and 'amazon' by these specific values
+  amazon_nov01_short <- amazon_nov01_short %>%
+    mutate(nasdaq = 100*nasdaq / specific_date_values$nasdaq,
+           amazon = 100*amazon / specific_date_values$amazon)
+  ggplot(data = amazon_nov01_short, aes(x = Date)) +
+         geom_line(aes(y = nasdaq, color = "NASDAQ", group = 1)) +
+         geom_vline(xintercept = as.Date("2001-11-13"), linetype = "dashed", color = "black") +
+         geom_line(aes(y = amazon, color = "Amazon", group = 1)) +
+         labs(title = "NASDAQ vs Amazon Stock Prices in November 2001 (11/13/01 = 100)", x = "Date", y = "Stock Price") +
+         scale_color_manual(values = c("blue", "red")) +
+         theme_minimal() +
+         theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 14),  # X-axis labels
+                           axis.text.y = element_text(size = 14),  # Y-axis labels
+                           legend.title = element_blank(),  # Legend title
+                           legend.text = element_text(size = 14),   # Legend labels
+                           plot.title = element_text(size = 14, hjust = 0.5))  # Centralized title
+  ggsave(paste0(figfolder, "amazon_nov01.png"), plot = last_plot(), dpi = 600)
+}
+
+stargaze_comparison <- function(comparison_measures, figfolder){
+  stargazer(comparison_measures, title = "Correlation of textual-based measure of KK risk with other firm-level measures", 
+align = TRUE, header = FALSE, summary = FALSE, rownames = FALSE, digit.separator = "", label = "fig:bytech", out = paste0(figfolder, "corr_measures", ".tex")) 
 }
 
 
