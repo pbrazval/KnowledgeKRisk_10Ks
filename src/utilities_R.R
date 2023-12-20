@@ -145,10 +145,6 @@ understand_topics <- function(topic_map_labeled, labels, quantiles, textfolder){
     select(starts_with("topic"), "xir_cumsum") 
   patentcor_matrix <- melt(cor(patentcor, use = "complete.obs"))
   
-  patentcor = topic_map %>%
-    select(starts_with("topic"), "xir_cumsum") 
-  patentcor_matrix <- melt(cor(patentcor, use = "complete.obs"))
-  
   heatmap <- ggplot(patentcor_matrix, aes(Var1, Var2)) +    # Create default ggplot2 heatmap
     geom_tile(aes(fill = value)) + 
     geom_text(aes(label = round(value,3))) + 
@@ -529,5 +525,35 @@ stargaze_comparison <- function(comparison_measures, figfolder){
 align = TRUE, header = FALSE, summary = FALSE, rownames = FALSE, digit.separator = "", label = "fig:bytech", out = paste0(figfolder, "corr_measures", ".tex")) 
 }
 
-
+filecounter <- function(textfolder){
+  path <- "/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/1A files/"
+  year_file_counts <- vector("numeric", length = 2022-2006+1)
+  names(year_file_counts) <- 2006:2022
+  for (year in 2006:2022) {
+    folder_path <- paste0(path, "/", year)
+    if (dir.exists(folder_path)) {
+      subfolder_names <- c("Q1", "Q2", "Q3", "Q4")
+      year_file_count <- 0
+      
+      for (subfolder in subfolder_names) {
+        subfolder_path <- file.path(folder_path, subfolder)
+        if (dir.exists(subfolder_path)) {
+          year_file_count <- year_file_count + length(list.files(subfolder_path))
+        }
+      }
+      
+      year_file_counts[as.character(year)] <- year_file_count
+    }
+  }
+  
+  lemmat_counts = read_csv("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/output/descriptive/lemmat_counts.csv")
+  lemmat_counts$Total_1As = as.vector(year_file_counts)
+  lemmat_counts = lemmat_counts %>%
+    rename(Filtered = Count) %>%
+    select(Year, Total_1As, Filtered)
+  tex_table <- stargazer(lemmat_counts, title = "File Counts by Year", 
+                         align = TRUE, header = FALSE, 
+                         summary = FALSE, rownames = FALSE, digit.separator = "", out = paste0(textfolder, "file_counts", ".tex"))
+  
+}
 

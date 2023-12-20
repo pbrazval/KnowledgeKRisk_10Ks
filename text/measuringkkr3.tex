@@ -22,9 +22,9 @@
 \begin{document}
 \title{Measuring Knowledge Capital Risk: Evidence from firm 10-Ks}
 \author{Pedro H. Braz Vallocci \footnote{Ph.D. candidate in Economics, University of California, Santa Cruz} 
-\footnote{I am very grateful to my advisor, Galina Hale, for her continuous support during my whole research process. I also thank Alonso Villacorta, Grace Gu, John Fernald, Michael Leung, Brenda Samaniego de la Parra, Chenyue Hu, Roberto Mauad, Bhavyaa Sharma, Ted Liu, Harrison Shieh, and the UCSC Macro Workshop participants for all their valuable comments.}} % 
+\footnote{I am very grateful to my advisor, Galina Hale, for her continuous support throughout my Ph.D. I also thank Alonso Villacorta, Grace Gu, John Fernald, Michael Leung, Brenda Samaniego de la Parra, Chenyue Hu, Roberto Mauad, Bhavyaa Sharma, Ted Liu, Harrison Shieh, and the UCSC Macro Workshop participants for all their valuable comments.}} % 
 
-\newcommand{\ffo}{dicfullmc10thr10defnob5noa0_8_4t}
+\newcommand{\ffo}{dicfullmc10thr10defnob40noa1_4t}
 
 \newcommand{\insertfigure}[3]{
 \begin{figure}[H]
@@ -134,6 +134,10 @@ Lastly, relying on patents as a measure of a firm's knowledge intensity only tel
 
 In this paper, knowledge capital risk is defined as the unique form of risk that innovation-centric firms bear, particularly when their cash flow trajectories are influenced by the stochastic nature of research-induced innovations. This risk is inherent in the unpredictable timing and impact of such innovations on a firm's financial performance.
 
+An example of volatility caused by R\&D investments in a firm is shown in Figure 
+
+\insertfigure{amazon_nov01.png}{Text}{0.8}
+
 Methodologies for textual analysis, such as pattern detection, are diverse and multifaceted. They encompass a range of techniques from simple pattern matching to more complex algorithmic constructions of term sets, as well as the identification of prevailing topics within textual data. These methods are employed to extract meaningful patterns and trends from unstructured text.
 
 The concept of knowledge capital risk, however, lacks an empirical "ground truth," a benchmark against which the accuracy of predictions or classifications can be validated, such as the VIX in \cite{Manela2017-lj}, used as ground truth to create a measure of news volatility dating back to 1890. Moreover, the construction of a comprehensive dictionary is complex, as the terminology can vary significantly across industries. For instance, the lexicon indicative of intellectual property concerns in pharmaceutical companies may frequently reference terms such as "clinical trials" or "regulatory compliance" within their annual reports.
@@ -195,10 +199,10 @@ The next step is to convert each text in the corpus to a bag-of-words format, de
 
 Upon having the corpus and the dictionary, I employ LDA to endogenously generate topic loadings for the entire set of documents. During the model's configuration, I designate a parameter to specify the number of topics, represented as \(k\), and supply the model with the dictionary I previously created. Selecting an appropriate value for \(k\) is typically done \textit{ad hoc}, with the primary consideration being interpretability, as highlighted by Gentzkow (2019).
 
-A representative output from this modeling approach can be viewed in Figure \ref{fig:bubble_plot}.
+A representative output from this modeling approach can be viewed in Figure \ref{fig:wordclouds}.
 
 
-\insertfigure{bubble_plot}{A graphic representation of a four-topic model on firms' risk factors since 2006.}{1}
+\insertfigure{wordclouds}{A graphic representation of a four-topic model on firms' risk factors since 2006.}{1}
 
 After merging a four-topic map between firms and topic intensities to firms' identifying data, I obtain a topic map as shown in Table \ref{tab:topic_map}.
 
@@ -244,9 +248,9 @@ As depicted in Figure \ref{fig:mean_tiy}, the mean topic intensity per year demo
 
 \insertfigure{mean_tiy}{Mean annual topic intensity}{0.7}
 
-Quartiles for \tkk are shown in Figure \ref{fig:topickk_distr}. As the figure shows, knowledge capital risk is unevenly distributed among firms, with more than half of the firms having \tkk $< 0.25$.
-
-\insertfigure{topickk_distr}{The histogram bars represent the frequency of $Topic_{kk}$ values, while the red dashed lines indicate the quartile dividers. }{0.7} 
+%Quartiles for \tkk are shown in Figure \ref{fig:topickk_distr}. As the figure shows, knowledge capital risk is unevenly distributed among firms, with more than half of the firms having \tkk $< 0.25$.
+%
+%\insertfigure{topickk_distr}{The histogram bars represent the frequency of $Topic_{kk}$ values, while the red dashed lines indicate the quartile dividers. }{0.7} 
 
 Lastly, Figure \ref{fig:stackedplot_at} illustrates the accumulated assets of firms in the upper quartile of $Topic_{kk}$, which shows a clear prevalence of firms in the Business Equipment, Chemicals, and Other sectors.
 
@@ -272,9 +276,7 @@ The second component of the analysis, shown in Figure \ref{fig:firmsbypat_hm}, c
 
  In Figure \ref{fig:firmsbypat_hm}, the vertical axis signifies annually assigned quartiles of the ratio between Accumulated Patent Value and Total Assets. The results imply a clear correlation between elevated accumulated patent value and increased loadings of $Topic_{kk}$. A basic correlation analysis between average patent intensity and different topics is shown in Figure \ref{fig:heatmap_patents}.
 
-\insertfigure{firmsbypat_hm}{Quartiles of \tkk vs. quartiles of accumulated total patent market value}{0.7}
-
-\insertfigure{heatmap_patents}{Correlation Matrix: Topic Intensities vs. Firms' Patent Intensities}{0.7}
+\insertfigure{heatmap_patents}{Quartiles of \tkk vs. quartiles of accumulated total patent market value}{0.7}
 
 Figure \ref{fig:topicvskkpt_hm} demonstrates the correlation between $Topic_{kk}$ and knowledge capital, as per the definition provided by Peters and Taylor (2017). Notably, it appears that higher accumulated investments in R\&D correspond to increased loadings of $Topic_{kk}$. 
 
@@ -292,7 +294,7 @@ The investigation includes an analysis of value-weighted returns, partitioned ac
 
 In Figure \ref{fig:awawr_aggind}, when constructing $Topic_{kk}$ quartiles for each yearly-industry subset based on the 12-industry Fama-French classification, the resulting patterns become less interpretable.
 
-\insertfigure{awawr_aggind}{Value-weighted Returns Grouped by Yearly-Industry Subset Quartiles, Indicating Less Interpretable Patterns}{0.7}
+%\insertfigure{awawr_aggind}{Value-weighted Returns Grouped by Yearly-Industry Subset Quartiles, Indicating Less Interpretable Patterns}{0.7}
 
 Figure \ref{fig:awawr_byg} displays value-weighted accumulated weekly returns, grouped by firms' maximum topic. Notably, firms with the maximum loading on $Topic_{kk}$ (topic 1) have outperformed their peers since 2008.
 

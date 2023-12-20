@@ -38,7 +38,6 @@ stoxwe_orig = stoxwe_post2005short
 load("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/stoxmo_post2000short.Rdata")
 load("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/stoxda_post2005veryshort.Rdata")
 comparison_measures <- read.csv("~/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/comparison_measures.csv")
-
 stoxda_orig = stoxwe_post2005short
 
 ## Defining source of stocks information -----------
@@ -49,6 +48,9 @@ cequity_mapper = redo_equity_mapper(comp_funda2, figfolder)
 
 ## Creating Amazon graph for motivation
 amazon_graph(amazon_nov01_short, figfolder)
+
+## Create filecounts.tex
+filecounter(figfolder)
 
 ## Create Stargazer comparison of measures
 stargaze_comparison(comparison_measures, figfolder)
@@ -193,6 +195,7 @@ print("Creating stoxwe_with_pfs...")
 stoxwe_with_pfs = attributePortfolios(stoxwe)
   
 pf_ret = stoxwe_with_pfs %>%
+  drop_na(eretw, me) %>%
   group_by(yw, pf36_name) %>%
   summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), Mkt.RF = mean(Mkt.RF), SMB = mean(SMB), HML = mean(HML), RF = mean(RF))
 

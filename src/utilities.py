@@ -34,9 +34,6 @@ def gen_corpus(id2word, data_words):
             print('Text entered corpus:', i)
     return (corpus)
 
-
-
-
 def create_crosswalks(filename_list, yr):
     print(f"Creating cross walks for year {yr}")
     fn_list = [fn.split('/')[-1] for fn in filename_list]

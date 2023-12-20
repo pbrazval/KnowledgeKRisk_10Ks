@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.17)  1 DEC 2023 19:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.5.17)  20 DEC 2023 15:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -240,7 +240,11 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 22.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/psnfss/ot1ppl.fd
 File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
-) (/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.aux)
+) (/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.aux
+
+LaTeX Warning: Label `' multiply defined.
+
+)
 \openout1 = `measuringkkr3.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
@@ -363,76 +367,152 @@ Overfull \hbox (16.95946pt too wide) in paragraph at lines 124--125
 \OT1/ppl/m/n/12 as or-ga-ni-za-tional cap-i-tal and brand cap-i-tal. This can blur the dis-tinc-tion be-tween knowledge-
  []
 
-[4] [5] [6]
+[4]
+<dicfullmc10thr10defnob40noa1_4t/amazon_nov01.png, id=168, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/amazon_nov01.png Graphic file (type png)
+<use dicfullmc10thr10defnob40noa1_4t/amazon_nov01.png>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/amazon_nov01.png  used on input line 139.
+(pdftex.def)             Requested size: 375.80544pt x 375.79881pt.
+ [5] [6 <./dicfullmc10thr10defnob40noa1_4t/amazon_nov01.png>] [7]
 
-Package caption Warning: \label without proper reference on input line 4.
-See the caption package documentation for explanation.
+LaTeX Warning: Reference `tab:file_counts' on page 8 undefined on input line 176.
 
+(./dicfullmc10thr10defnob40noa1_4t/file_counts.tex)
+<dicfullmc10thr10defnob40noa1_4t/wordclouds.png, id=205, 722.7pt x 722.7pt>
+File: dicfullmc10thr10defnob40noa1_4t/wordclouds.png Graphic file (type png)
+<use dicfullmc10thr10defnob40noa1_4t/wordclouds.png>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/wordclouds.png  used on input line 205.
+(pdftex.def)             Requested size: 469.75502pt x 469.76045pt.
+ [8] [9]
 
-LaTeX Warning: Reference `tab:file_counts' on page 7 undefined on input line 172.
+LaTeX Warning: Reference `tab:topic_map' on page 10 undefined on input line 207.
 
-(./dicfullmc10thr10defnob5noa0_8_4t/file_counts.tex)
-<dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png, id=199, 1202.4925pt x 705.63625pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png Graphic file (type png)
-<use dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png  used on input line 201.
-(pdftex.def)             Requested size: 469.75502pt x 275.66002pt.
- [7] [8]
-
-Package caption Warning: \label without proper reference on input line 2.
-See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `tab:topic_map' on page 9 undefined on input line 203.
-
-(./dicfullmc10thr10defnob5noa0_8_4t/topic_map_sample.tex
-Overfull \hbox (46.91388pt too wide) in paragraph at lines 3--20
+(./dicfullmc10thr10defnob40noa1_4t/topic_map_sample.tex
+Overfull \hbox (154.54489pt too wide) in paragraph at lines 5--22
  [][] 
  []
 
-) [9 <./dicfullmc10thr10defnob5noa0_8_4t/bubble_plot.png>]
+) [10 <./dicfullmc10thr10defnob40noa1_4t/wordclouds.png>]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 226.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 226.
+(hyperref)                removing `math shift' on input line 230.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 226.
+(hyperref)                removing `subscript' on input line 230.
 
-(./dicfullmc10thr10defnob5noa0_8_4t/tpcavg_tech.tex)
-<dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg, id=227, 1162.3425pt x 1249.66875pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg Graphic file (type jpg)
-<use dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg  used on input line 245.
-(pdftex.def)             Requested size: 328.82707pt x 353.52786pt.
- [10]
-<dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png, id=236, 3011.25pt x 2409.0pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png Graphic file (type png)
-<use dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png  used on input line 249.
-(pdftex.def)             Requested size: 328.82707pt x 263.04263pt.
- [11 <./dicfullmc10thr10defnob5noa0_8_4t/mean_tiy.jpg>]
-<dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png, id=243, 3011.25pt x 2409.0pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png Graphic file (type png)
-<use dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png  used on input line 256.
-(pdftex.def)             Requested size: 328.82707pt x 263.04263pt.
- [12 <./dicfullmc10thr10defnob5noa0_8_4t/topickk_distr.png>]
-<dicfullmc10thr10defnob5noa0_8_4t/heatmap.png, id=251, 3011.25pt x 2409.0pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/heatmap.png Graphic file (type png)
-<use dicfullmc10thr10defnob5noa0_8_4t/heatmap.png>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/heatmap.png  used on input line 269.
-(pdftex.def)             Requested size: 328.82707pt x 263.04263pt.
- [13 <./dicfullmc10thr10defnob5noa0_8_4t/stackedplot_at.png>]
-Overfull \hbox (1.74112pt too wide) in paragraph at lines 271--272
-[]\OT1/ppl/m/n/12 The sec-ond com-po-nent of the anal-y-sis, shown in Fig-ure [][]6[][], com-putes the co-occurrences
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 230.
+
+
+LaTeX Warning: Reference `tab:bytech' on page 11 undefined on input line 237.
+
+(./dicfullmc10thr10defnob40noa1_4t/tpcavg_tech.tex) [11]
+<dicfullmc10thr10defnob40noa1_4t/mean_tiy.jpg, id=236, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/mean_tiy.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob40noa1_4t/mean_tiy.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/mean_tiy.jpg  used on input line 249.
+(pdftex.def)             Requested size: 328.82707pt x 328.77571pt.
+<dicfullmc10thr10defnob40noa1_4t/stackedplot_at.png, id=238, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/stackedplot_at.png Graphic file (type png)
+<use dicfullmc10thr10defnob40noa1_4t/stackedplot_at.png>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/stackedplot_at.png  used on input line 260.
+(pdftex.def)             Requested size: 328.82707pt x 328.77571pt.
+ [12 <./dicfullmc10thr10defnob40noa1_4t/mean_tiy.jpg>]
+<dicfullmc10thr10defnob40noa1_4t/heatmap.png, id=246, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/heatmap.png Graphic file (type png)
+<use dicfullmc10thr10defnob40noa1_4t/heatmap.png>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/heatmap.png  used on input line 273.
+(pdftex.def)             Requested size: 328.82707pt x 328.77571pt.
+ [13 <./dicfullmc10thr10defnob40noa1_4t/stackedplot_at.png>]
+
+LaTeX Warning: Reference `fig:firmsbypat_hm' on page 14 undefined on input line 275.
+
+
+Overfull \hbox (6.39697pt too wide) in paragraph at lines 275--276
+[]\OT1/ppl/m/n/12 The sec-ond com-po-nent of the anal-y-sis, shown in Fig-ure [], com-putes the co-occurrences
  []
 
-<dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png, id=266, 3011.25pt x 2409.0pt>
-File: dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png Graphic file (type png)
-<use dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.png>
-Package pdftex.def Info: dicfullmc10thr10defnob5noa0_8_4t/firmsbypat_hm.p
+
+LaTeX Warning: Reference `fig:firmsbypat_hm' on page 14 undefined on input line 277.
+
+<dicfullmc10thr10defnob40noa1_4t/heatmap_patents.png, id=259, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/heatmap_patents.png Graphic file (type png)
+<use dicfullmc10thr10defnob40noa1_4t/heatmap_patents.png>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/heatmap_patents.png  used on input line 279.
+(pdftex.def)             Requested size: 328.82707pt x 328.77571pt.
+[14 <./dicfullmc10thr10defnob40noa1_4t/heatmap.png>]
+<dicfullmc10thr10defnob40noa1_4t/topicvskkpt_hm.png, id=267, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/topicvskkpt_hm.png Graphic file (type png)
+<use dicfullmc10thr10defnob40noa1_4t/topicvskkpt_hm.png>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/topicvskkpt_hm.png  used on input line 283.
+(pdftex.def)             Requested size: 328.82707pt x 328.77571pt.
+ [15 <./dicfullmc10thr10defnob40noa1_4t/heatmap_patents.png>]
+<dicfullmc10thr10defnob40noa1_4t/awawr.jpg, id=275, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/awawr.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob40noa1_4t/awawr.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/awawr.jpg  used on input line 293.
+(pdftex.def)             Requested size: 328.82707pt x 328.77571pt.
+ [16 <./dicfullmc10thr10defnob40noa1_4t/topicvskkpt_hm.png>]
+
+LaTeX Warning: Reference `fig:awawr_aggind' on page 17 undefined on input line 295.
+
+<dicfullmc10thr10defnob40noa1_4t/awawr_byg.jpg, id=283, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/awawr_byg.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob40noa1_4t/awawr_byg.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/awawr_byg.jpg  used on input line 301.
+(pdftex.def)             Requested size: 328.82707pt x 328.77571pt.
+[17 <./dicfullmc10thr10defnob40noa1_4t/awawr.jpg>]
+<dicfullmc10thr10defnob40noa1_4t/wsdr_byg.jpg, id=290, 4215.75pt x 4215.75pt>
+File: dicfullmc10thr10defnob40noa1_4t/wsdr_byg.jpg Graphic file (type jpg)
+<use dicfullmc10thr10defnob40noa1_4t/wsdr_byg.jpg>
+Package pdftex.def Info: dicfullmc10thr10defnob40noa1_4t/wsdr_byg.jpg  used on input line 305.
+(pdftex.def)             Requested size: 328.82707pt x 328.77571pt.
+ [18 <./dicfullmc10thr10defnob40noa1_4t/awawr_byg.jpg>]
+Overfull \hbox (4.52408pt too wide) in paragraph at lines 311--312
+\OT1/ppl/m/n/12 ex-am-ple, a prior for $\OML/zplm/m/it/12 Topic[]$ \OT1/ppl/m/n/12 could be im-posed, com-pris-ing spe-cific words such as ``patents"
+ []
+
+(/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.bbl [19 <./dicfullmc10thr10defnob40noa1_4t/wsdr_byg.jpg>]
+Underfull \hbox (badness 2644) in paragraph at lines 50--51
+[]\OT1/ppl/m/n/12 Eisfeldt, An-drea L, Ed-ward Kim, and Dim-itris Pa-paniko-laou (2020) ``In-tan-gi-ble
+ []
+
+[20] [21])
+<cdf_words.png, id=314, 462.528pt x 346.896pt>
+File: cdf_words.png Graphic file (type png)
+<use cdf_words.png>
+Package pdftex.def Info: cdf_words.png  used on input line 346.
+(pdftex.def)             Requested size: 211.38832pt x 158.54192pt.
+<cdf_words_zoom.png, id=315, 462.528pt x 346.896pt>
+File: cdf_words_zoom.png Graphic file (type png)
+<use cdf_words_zoom.png>
+Package pdftex.def Info: cdf_words_zoom.png  used on input line 353.
+(pdftex.def)             Requested size: 211.38832pt x 158.54192pt.
+ [22] [23 <./cdf_words.png> <./cdf_words_zoom.png>] (/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package rerunfilecheck Info: File `measuringkkr3.out' has not changed.
+(rerunfilecheck)             Checksum: BE083113990F88B7F31CD100996F11EF;1914.
+ ) 
+Here is how much of TeX's memory you used:
+ 11763 strings out of 476025
+ 202267 string characters out of 5790017
+ 1871388 words of memory out of 5000000
+ 31925 multiletter control sequences out of 15000+600000
+ 548457 words of font info for 121 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 75i,16n,77p,1060b,605s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/mathpazo/fplmri.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
+Output written on "/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/.texpadtmp/measuringkkr3.pdf" (23 pages, 6069107 bytes).
+PDF statistics:
+ 381 PDF objects out of 1000 (max. 8388607)
+ 318 compressed objects within 4 object streams
+ 85 named destinations out of 1000 (max. 500000)
+ 157 words of extra memory for PDF output out of 10000 (max. 10000000)
+
