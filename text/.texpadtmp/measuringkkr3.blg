@@ -8,6 +8,10 @@ Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Database file #1: ../mylibrary2.bib
+Repeated entry---line 166 of file ../mylibrary2.bib
+ : @article{Goyal2012-ct
+ :                      ,
+I'm skipping whatever remains of this entry
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
@@ -20,45 +24,45 @@ Warning--empty note in McGrattan2001-kc
 Warning--empty journal in Mikolov2013-be
 Warning--there is no volume, number, and pages in Mikolov2013-be
 Warning--there is no volume, number, and pages in Peri2015-qt
-You've used 32 entries,
+You've used 34 entries,
             6826 wiz_defined-function locations,
-            1503 strings with 14494 characters,
-and the built_in function-call counts, 39440 in all, are:
-= -- 6615
-> -- 1780
-< -- 80
-+ -- 571
-- -- 673
-* -- 2268
-:= -- 5307
-add.period$ -- 25
-call.type$ -- 32
-change.case$ -- 237
-chr.to.int$ -- 31
-cite$ -- 41
-duplicate$ -- 918
-empty$ -- 1766
-format.name$ -- 562
-if$ -- 10525
+            1517 strings with 14752 characters,
+and the built_in function-call counts, 41827 in all, are:
+= -- 7017
+> -- 1865
+< -- 86
++ -- 597
+- -- 700
+* -- 2400
+:= -- 5635
+add.period$ -- 27
+call.type$ -- 34
+change.case$ -- 251
+chr.to.int$ -- 33
+cite$ -- 43
+duplicate$ -- 978
+empty$ -- 1882
+format.name$ -- 586
+if$ -- 11151
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 0
-newline$ -- 109
-num.names$ -- 322
-pop$ -- 415
+newline$ -- 115
+num.names$ -- 344
+pop$ -- 439
 preamble$ -- 1
-purify$ -- 236
+purify$ -- 250
 quote$ -- 0
-skip$ -- 2674
+skip$ -- 2839
 stack$ -- 0
-substring$ -- 2648
-swap$ -- 144
-text.length$ -- 176
+substring$ -- 2836
+swap$ -- 154
+text.length$ -- 194
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 536
+type$ -- 570
 warning$ -- 9
-while$ -- 269
+while$ -- 291
 width$ -- 0
-write$ -- 469
-(There were 9 warnings)
+write$ -- 499
+(There was 1 error message)

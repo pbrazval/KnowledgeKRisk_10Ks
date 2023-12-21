@@ -9,6 +9,7 @@
 \usepackage{lipsum} 
 \usepackage{mathpazo}
 \usepackage{hyperref}
+\usepackage{amsmath}
 \bibliographystyle{econ}
 \hypersetup{
     colorlinks=true,%    linkcolor=blue,    filecolor=magenta,      
@@ -53,7 +54,7 @@ For the latest version of this paper, click \href{https://github.com/pbrazval/jm
 \end{center}
 
 \begin{abstract}
-    This study proposes a methodology to identify firms that are vulnerable to knowledge capital-related risks, relying on a textual analysis of the risk factors disclosed in their annual reports. Further, the paper quantifies these risks through an examination of firms' concurrent return patterns. \newline \textbf{\indent Keywords:} Innovation, firm risk factors, productivity, intangible capital, natural language processing, asset pricing \newline \textbf{\indent JEL classification:} C43, C55, D2, E22, G11, O3
+    This study proposes a novel measure of yearly firm-level R\&D-related risks, by performing an LDA analysis of self-reported risk factors disclosed in firms' 10-Ks.  Higher levels of R\&D risks are associated with distinctive and higher levels of volatility and kurtosis in stock returns, consistent with previous literature on the R\&D anomaly and the expectation of increased tail risk for R\&D ventures. \newline \textbf{\indent Keywords:} Innovation, firm risk factors, productivity, intangible capital, natural language processing, asset pricing \newline \textbf{\indent JEL classification:} C43, C55, D2, E22, G11, O3
 \end{abstract}
 
 \newpage 
@@ -128,17 +129,49 @@ Lastly, relying on patents as a measure of a firm's knowledge intensity only tel
 
 \citet{Kogan2017-fx} demonstrate that the companies' market value surges within the following three days of the filing of potentially lucrative patents, that is, patents that have the potential to amplify a firm's revenue streams while simultaneously stifling competition. Yet, one must ponder whether the stock market, outside patent-filing moments, also internalizes the inherent risks of devoting a significant part of investments to a risky innovation process.
 
-\section{Methodology and Data}
+\section{Data}
 
-% Galina: need to add: brief summary of what is in this section. E.g. why is LDA the most appropriate technique for you?
+I retrieve a total of  121,839 annual reports (10-Ks) for all U.S. publicly listed firms since 2013 from the Securities and Exchange Commission's EDGAR database. A 10-K is a comprehensive document that provides an overview of the company's financial performance and operations over a year, offering a detailed picture of a company's business.  To ensure transparency and accuracy, laws and regulations strictly prohibit companies from making false or misleading statements in their 10-Ks. Additionally, under the Sarbanes-Oxley Act, a company's Chief Financial Officer (CFO) and Chief Executive Officer (CEO) are required to certify the accuracy of the 10-K (\cite{SEC_Office_of_Investor_Education_and_Advocacy2011-tw}).
+
+Item 1A of a 10-K (``Risk Factors") includes information about the most significant risks that apply to the company or its securities.  I extract the item 1A information from each 10-K using XML parsing and \texttt{BeautifulSoup}, and remove supposedly less meaningful characters such as punctuation and numbers.
+
+\subsection{Filtering firms}
+
+Following \cite{Golubov2019-ku, Stambaugh2016-eb}, I filter firms by considering only ordinary common shares, traded on NYSE, AMEX, and NASDAQ exchanges; and following \cite{Stambaugh2016-eb} I exclude those whose prices are less than \$5 in 2016 dollars. 
+
+Reporting risk factors is mandatory for most firms; however, there are exceptions for asset-backed issuers and smaller reporting companies. Asset-backed issuers are defined as issuers whose reporting obligation arises from either the registration of an offering of asset-backed securities under the Securities Act or the registration of a class of asset-backed securities. Firms that are not required to disclose risk factors either leave Item 1A empty or write a placeholder text specifying that, due to their nature, they are not required to disclose risk factors. Consequently, there is an abnormal frequency of 10-K filings with a significantly low number of words, as depicted in Figure \ref{fig:cdf}. In subsequent stages, 1A texts with an insufficient word count are discarded. The threshold adopted was 200 words. The total count of filtered firms by year is shown in Table \ref{tab:file_counts}.
+
+The next step is to convert each text in the corpus to a bag-of-words format, detailed in Appendix A.
+
+% TODO Need to change: use min10kwords = 200
+
+
+\input{\ffo/file_counts.tex} 
+
+
+%Through this approach, I have observed a positive correlation between higher intensities of a specific topic, hereafter referred to as "$Topic_{kk}$", and the aforementioned measures. This suggests that firms that more frequently discuss this topic may have higher levels of knowledge capital, accumulated patent value, and industry skill.
+%
+%Furthermore, I have found that firms in the upper quartile of "$Topic_{kk}$" intensity have consistently outperformed their peers in terms of returns since 2006. This finding indicates a potential link between the subject matter discussed in firms' annual reports and their financial performance.x
+
+%TODO Create in R a function that receives one of the key df's 
+
+%TODO Create in r a funciton that returns: for a given year; distr per topic; average K_int/K_int_Know per topic; average patent expenditure; average/std size  
+
+% TODO: How many 1As per year? How many public firms in Compustat?
+
+
+
+\section{Measuring knowledge capital risk at the firm level}
+
+This paper introduces a novel measure for evaluating firm-level risks associated with R\&D ventures. R\&D is a crucial driver of innovation and firm value, with inherently uncertain outcomes. R\&D investment has option-like characteristics, whereby firms assess whether to continue or suspend R\&D based on anticipated cash flows (Berk, 2004; Leung, 2020). We highlight both the downside risks, such as regulatory rejections, lost patent races, or obsolescence of intellectual capital, and the upside potentials, exemplified by breakthrough patents that significantly boost firm earnings. 
 
 In this paper, knowledge capital risk is defined as the unique form of risk that innovation-centric firms bear, particularly when their cash flow trajectories are influenced by the stochastic nature of research-induced innovations. This risk is inherent in the unpredictable timing and impact of such innovations on a firm's financial performance.
 
-An example of volatility caused by R\&D investments in a firm is shown in Figure 
+An example of volatility caused by R\&D investments in a firm is shown in Figure \ref{fig:amazon_nov01} 
 
-\insertfigure{amazon_nov01.png}{Text}{0.8}
+\insertfigure{amazon_nov01}{Text}{0.8}
 
-Methodologies for textual analysis, such as pattern detection, are diverse and multifaceted. They encompass a range of techniques from simple pattern matching to more complex algorithmic constructions of term sets, as well as the identification of prevailing topics within textual data. These methods are employed to extract meaningful patterns and trends from unstructured text.
+Methodologies for pattern detection in textual analysis encompass a range of techniques from simple pattern matching to more complex algorithmic constructions of term sets, as well as the identification of prevailing topics within textual data.
 
 The concept of knowledge capital risk, however, lacks an empirical "ground truth," a benchmark against which the accuracy of predictions or classifications can be validated, such as the VIX in \cite{Manela2017-lj}, used as ground truth to create a measure of news volatility dating back to 1890. Moreover, the construction of a comprehensive dictionary is complex, as the terminology can vary significantly across industries. For instance, the lexicon indicative of intellectual property concerns in pharmaceutical companies may frequently reference terms such as "clinical trials" or "regulatory compliance" within their annual reports.
 
@@ -163,38 +196,6 @@ The output of an LDA operation is twofold: firstly, it generates a list of topic
 
 It is important to note that LDA is an unsupervised learning method. This means that it operates without any predefined labels, instead learning and inferring patterns directly from the data. However, this also poses a challenge, since the topics generated might not necessarily align with any intuitive description, requiring therefore post-analysis interpretation. %This characteristic makes LDA a versatile tool, able to extract valuable insights from large and complex corpora of text data.
 
-\subsection{Data}
-
-I retrieve the annual reports (10-Ks) for all U.S. publicly listed firms since 2013 from the Securities and Exchange Commission's EDGAR database. A 10-K is a comprehensive document that provides an overview of the company's financial performance and operations over a year, offering a detailed picture of a company's business.  To ensure transparency and accuracy, laws and regulations strictly prohibit companies from making false or misleading statements in their 10-Ks. Additionally, under the Sarbanes-Oxley Act, a company's Chief Financial Officer (CFO) and Chief Executive Officer (CEO) are required to certify the accuracy of the 10-K (\cite{SEC_Office_of_Investor_Education_and_Advocacy2011-tw}).
-
-Item 1A of a 10-K (``Risk Factors") includes information about the most significant risks that apply to the company or its securities.  I extract the item 1A information from each 10-K using XML parsing and \texttt{BeautifulSoup}, and removed supposedly less meaningful characters such as punctuation and numbers.
-
-\subsection{Filtering firms}
-
-Following \cite{Golubov2019-ku, Stambaugh2016-eb}, I filter firms by considering only ordinary common shares, traded on NYSE, AMEX, and NASDAQ exchanges; and following \cite{Stambaugh2016-eb} I exclude those whose prices are less than \$5 in 2016 dollars. 
-
-Reporting risk factors is mandatory for most firms; however, there are exceptions for asset-backed issuers and smaller reporting companies. Asset-backed issuers are defined as issuers whose reporting obligation arises from either the registration of an offering of asset-backed securities under the Securities Act or the registration of a class of asset-backed securities. Firms that are not required to disclose risk factors either leave Item 1A empty or write a placeholder text specifying that, due to their nature, they are not required to disclose risk factors. Consequently, there is an abnormal frequency of 10-K filings with a significantly low number of words, as depicted in Figure \ref{fig:cdf}. In subsequent stages, 1A texts with an insufficient word count are discarded. The threshold adopted was 200 words. The total count of filtered firms by year is shown in Table \ref{tab:file_counts}.
-
-The next step is to convert each text in the corpus to a bag-of-words format, detailed in Appendix A.
-
-% TODO Need to change: use min10kwords = 200
-
-
-\input{\ffo/file_counts.tex} 
-
-
-%Through this approach, I have observed a positive correlation between higher intensities of a specific topic, hereafter referred to as "$Topic_{kk}$", and the aforementioned measures. This suggests that firms that more frequently discuss this topic may have higher levels of knowledge capital, accumulated patent value, and industry skill.
-%
-%Furthermore, I have found that firms in the upper quartile of "$Topic_{kk}$" intensity have consistently outperformed their peers in terms of returns since 2006. This finding indicates a potential link between the subject matter discussed in firms' annual reports and their financial performance.
-
-
-
-%TODO Create in R a function that receives one of the key df's 
-
-%TODO Create in r a funciton that returns: for a given year; distr per topic; average K_int/K_int_Know per topic; average patent expenditure; average/std size  
-
-% TODO: How many 1As per year? How many public firms in Compustat?
-
 \subsection{Topic modeling}
 
 Upon having the corpus and the dictionary, I employ LDA to endogenously generate topic loadings for the entire set of documents. During the model's configuration, I designate a parameter to specify the number of topics, represented as \(k\), and supply the model with the dictionary I previously created. Selecting an appropriate value for \(k\) is typically done \textit{ad hoc}, with the primary consideration being interpretability, as highlighted by Gentzkow (2019).
@@ -202,12 +203,12 @@ Upon having the corpus and the dictionary, I employ LDA to endogenously generate
 A representative output from this modeling approach can be viewed in Figure \ref{fig:wordclouds}.
 
 
-\insertfigure{wordclouds}{A graphic representation of a four-topic model on firms' risk factors since 2006.}{1}
+\insertfigure{wordclouds}{A graphic representation of a four-topic model on firms' risk factors since 2006.}{0.7}
 
 After merging a four-topic map between firms and topic intensities to firms' identifying data, I obtain a topic map as shown in Table \ref{tab:topic_map}.
 
 \tiny
-\input{\ffo/topic_map_sample.tex}
+\input{\ffo/sample_map.tex}
 \normalsize
 
 %\caption{The left column shows the count of all 10-Ks retrieved for a given year. The right column counts all the 10-Ks that obey to the following filtering criteria: 1) Ordinary common shares; 2) Membership to NYSE, AMEX, and NASDAQ; 3) Price above \$ 5 in 2006 dollars; 4) Meaningful 10-K contents ($>$ 200 words)} 
@@ -221,7 +222,7 @@ After merging a four-topic map between firms and topic intensities to firms' ide
 
 % TODO Need to change: use default instead of npmi; min_count = 5; threshold = 10
 
-\section{Results}
+\section{Comparison to existing measures}
 
 In this section, I validate our text-based metric, $Topic_{kk}$, by cross-referencing it with established measures from prior literature. This assessment strengthens the reliability and relevance of our metric within the broader context of knowledge capital analysis.
 
@@ -260,9 +261,26 @@ Lastly, Figure \ref{fig:stackedplot_at} illustrates the accumulated assets of fi
 \insertfigure{stackedplot_at}{Accumulated Assets of Firms in the Upper Quartile of $Topic_{kk}$}{0.7}
 
 
+
 \subsection{Validating the text-based metric of knowledge-intensive firms}
   
 In this section, the text-based measure \tkk  is cross-examined with other potentially related measures drawn from existing literature.
+
+\begin{table}[!htbp]  
+  \label{fig:bytech} 
+  \scriptsize 
+\begin{tabular}{@{\extracolsep{0pt}} D{.}{.}{3} D{.}{.}{-3} D{.}{.}{-3} } 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\multicolumn{1}{c}{Topic} & \multicolumn{1}{c}{Skill (ind.)} & \multicolumn{1}{c}{Patent intensity (firm)} \\ 
+\hline \\[-1.8ex]
+\multicolumn{1}{c}{Raw Materials} & -0.542 & -0.064 \\ 
+\multicolumn{1}{c}{Software} & 0.534 & 0.163 \\ 
+\multicolumn{1}{c}{Financials} & -0.017 & -0.131 \\ 
+\multicolumn{1}{c}{KK} & 0.099 & 0.062 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
 
 Figure \ref{fig:heatmap} presents a correlation matrix that delineates the relationship between the intensity of each topic and the average skill level of employees within a narrowly-defined industry, in accordance with the definition given by Belo et al. (2017). These authors define 'Skill' as the proportion of industry workers engaged in occupations that demand a high degree of training and preparation.
 
@@ -282,7 +300,7 @@ Figure \ref{fig:topicvskkpt_hm} demonstrates the correlation between $Topic_{kk}
 
 \insertfigure{topicvskkpt_hm}{Correlation Between Knowledge Capital Quartiles and $Topic_{kk}$ Quartiles: Higher R\&D Investments Correlate with Higher Loadings of $Topic_{kk}$}{0.7}
 
-\subsection{Implications for Asset Pricing}
+\section{Knowledge capital risk and stock returns}
 
 % This subsection needs to be advertised in the introduction and at the beginning of section 3.
 
@@ -302,9 +320,54 @@ Figure \ref{fig:awawr_byg} displays value-weighted accumulated weekly returns, g
 
 Moving on to volatility patterns, Figure \ref{fig:wsdr_byg} presents the weekly standard deviation of returns within groups, categorized by the maximum topic. This analysis suggests that different topics are associated with varying cross-sectional volatility patterns.
 
-\insertfigure{wsdr_byg}{Weekly Standard Deviation of Returns Within Groups, Indicating Variations Across Different Topics}{0.7}
+\begin{figure}[h!]
+			\centering
+			\includegraphics[width=0.8\textwidth]{\ffo/wsdr.jpg}
+			\label{fig:wsdr}
+			\caption{Weekly standard deviation of returns within groups, grouped by maximum topic. Higher KK risk is associated with higher return volatility}
+\end{figure}
 
-\section{Next steps}
+
+The study investigates the heterogeneity in kurtosis patterns across different topics, focusing on the impact of innovation activities on financial metrics. It identifies a correlation between innovation and increased cash flow volatility, which manifests as fatter tails in return distributions. The analysis involves calculating the kurtosis of daily returns for each firm on a yearly basis and averaging these kurtoses annually for each topic. A significant observation is that firms with a high level of knowledge intensity tend to exhibit consistently higher kurtosis compared to their peers, a trend that has been evident since 2006. This relationship is visually represented in the study through Figure \ref{fig:kurtosis_maxtopic}, which displays the weekly standard deviation of returns by maximum topic, providing a clear illustration of the varying kurtosis patterns.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{\ffo/kurtosis_maxtopic.jpg}
+\caption{Weekly Standard Deviation of Returns by Maximum Topic}
+\label{fig:kurtosis_maxtopic}
+\end{figure}
+
+Furthering the analysis, the study examines the variation in kurtosis across quartiles of \tkk. This aspect focuses on how kurtosis fluctuates annually within categorized groups based on their quartile positioning in \tkk. A consistent and notable trend emerges from the data: as one moves to higher quartiles each year, kurtosis correspondingly increases. This pattern indicates a clear correlation between higher levels of self-reported knowledge capital risk and more pronounced tail risk in returns. This relationship is visually captured in Figure \ref{fig:kurtosis_ntile}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.9\textwidth]{\ffo/kurtosis_ntile.jpg}
+\caption{Weekly Standard Deviation of Returns by $Topic\_{kk}$ Quartiles}
+\label{fig:kurtosis_ntile}
+\end{figure}
+
+In the estimation of the knowledge risk premium \(\widehat{\lambda}_{kk}\), a two-stage approach is employed following the methodology outlined in \cite{Goyal2012-ct}. This involves the formation of 24 portfolios, expanding on the framework established by \cite{Fama1993-da}. The portfolios are categorized based on firm size (divided by NYSE's median), the MB ratio (divided by NYSE's 30th and 70th percentiles), and the quartiles of \(topic\_kk\). These portfolios are rebalanced every 26th calendar week.
+
+For each portfolio \(i\) and week \(t\), beta estimates are obtained through time-series regressions:
+
+\begin{align*}
+    R_{it} - R_{F,t} &= a_i + \beta_{M, i}(R_{M,t} - R_{F,t}) + \beta_{SMB, i} SMB_t \\
+    &+ \beta_{HML, i} HML_t + \beta_{KKHML, i} KKHML_t + \varepsilon_{i,t}
+\end{align*}
+
+Data for \(R_{F,t}\), \(SMB_t\), \(HML_t\), and \(R_{M,t} - R_{F,t}\) are sourced weekly from Kenneth French's database. The \(KKHML_t\) factor, representing differential excess return, is calculated as the difference between the returns of value-weighted portfolios in the lowest and highest quartiles of KK. Furthermore, a cross-sectional regression of average returns on betas is conducted:
+
+\begin{align}
+    \bar{R}_T = \widehat{B} \lambda + \alpha
+\end{align}
+
+The summarized findings and detailed analysis are presented in the summary table, integrated from an external file:
+
+\input{\ffo/summary_table.tex}
+
+%\insertfigure{wsdr_byg}{Weekly Standard Deviation of Returns Within Groups, Indicating Variations Across Different Topics}{0.7}
+
+\section{Conclusion}
 
 This study is ongoing, with numerous opportunities for enhancement and further exploration. For instance, the hyperparameter selection process could be optimized, potentially through cross-validation techniques. Existing benchmarks for the choice of $k$, such as perplexity, are also being considered for testing.
 
