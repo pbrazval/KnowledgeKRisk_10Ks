@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "env": {
+                "PYDEVD_WARN_EVALUATION_TIMEOUT": "300",
+                "PYDEVD_WARN_SLOW_RESOLVE_TIMEOUT": "500"
+            }
+        }
+    ]
+}

@@ -10,6 +10,7 @@
 \usepackage{mathpazo}
 \usepackage{hyperref}
 \usepackage{amsmath}
+\usepackage{pdflscape}
 \bibliographystyle{econ}
 \hypersetup{
     colorlinks=true,%    linkcolor=blue,    filecolor=magenta,      
@@ -105,6 +106,10 @@ The riskiness of intangible assets differs systematically from tangible ones \ci
 
 Knowledge capital's risk characteristics set it apart from other forms of intangible capital. Firms invest on research to increase their future earnings, but not all innovations come to fruition. For example, research conducted by a pharmaceutical firm can lead to successful new drugs that lead to patent rents for several years or to no result at all. The presence of innovation-driven jumps in cash flow is related to an increased empirical dispersion of Tobin's q, and also helps explain why the relatxion between Tobin's q and aggregate investment has become tighter since the mid-1990s \citep{Andrei2019-bh}. 
 
+An example of volatility caused by R\&D investments in a firm is shown in Figure \ref{fig:amazon_nov01}.
+
+\insertfigure{amazon_nov01}{Text}{0.9}
+
 Besides the uncertainty of research investments, a firm is also susceptible to writing off part of its knowledge capital due to obsolescence, e.g., when it narrowly loses a patent race \citep{Peters2017-fl}. Such competitive forces lead to R\&D capital depreciation. Depreciation rates vary over time and according to individual industry technological and competitive environments \citep{Li2020-xc}. Besides varying between industries, it is expected that depreciation rates vary across firms in the same industry, since firms' ability to materialize research into innovation and additional cash flow is also expected to be random, varying with managerial processes, employees' skills, and regulation-related uncertainty.
 
 Knowledge capital heavy firms also are especially vulnerable to loss of key talent. \cite{Eisfeldt2013-ad} find that firms are more likely to list ``loss of key talent" as a risk factor in their 10-K reports when they have high organization capital. Firms vulnerable to loss of key talent are especially susceptible to immigration-related risks, e.g., the H-1B visa annual quota shortages \citep{Peri2015-qt}. 
@@ -131,35 +136,107 @@ Lastly, relying on patents as a measure of a firm's knowledge intensity only tel
 
 \section{Data}
 
-I retrieve a total of  121,839 annual reports (10-Ks) for all U.S. publicly listed firms since 2013 from the Securities and Exchange Commission's EDGAR database. A 10-K is a comprehensive document that provides an overview of the company's financial performance and operations over a year, offering a detailed picture of a company's business.  To ensure transparency and accuracy, laws and regulations strictly prohibit companies from making false or misleading statements in their 10-Ks. Additionally, under the Sarbanes-Oxley Act, a company's Chief Financial Officer (CFO) and Chief Executive Officer (CEO) are required to certify the accuracy of the 10-K (\cite{SEC_Office_of_Investor_Education_and_Advocacy2011-tw}).
+\subsection{10-K data}
 
-Item 1A of a 10-K (``Risk Factors") includes information about the most significant risks that apply to the company or its securities.  I extract the item 1A information from each 10-K using XML parsing and \texttt{BeautifulSoup}, and remove supposedly less meaningful characters such as punctuation and numbers.
+I retrieve a total of  121,839 annual reports (10-Ks) for all U.S. publicly listed firms since 2013 from the EDGAR (Electronic Data Gathering, Analysis, and Retrieval) system, the Securities and Exchange Commission's electronic database used for the submission and public disclosure of financial statements and other reports filed by American publicly listed companies. A 10-K is a comprehensive document that provides an overview of the company's financial performance and operations over a year, offering a detailed picture of a company's business.  To ensure transparency and accuracy, laws and regulations strictly prohibit companies from making false or misleading statements in their 10-Ks. Additionally, under the Sarbanes-Oxley Act, enacted to enhance corporate transparency and accountability, a company's Chief Financial Officer (CFO) and Chief Executive Officer (CEO) are required to certify the accuracy of the 10-K (\cite{SEC_Office_of_Investor_Education_and_Advocacy2011-tw}).
 
-\subsection{Filtering firms}
+Within the 10-K form, item 1A (``Risk Factors") mandates registrants, when applicable, to disclose in plain English risk factors that make investments in the firm speculative or risky. The discussion must be logically organized, risks must be adequately described, and the reasons why risks affect the registrant must be explained. Specifically, presenting risks that could apply generically to any registrant is discouraged (17 CFR § 229.105).  Norms enforcing text structure, writing style, and readability also apply, ensuring that the risk factors are communicated effectively to all stakeholders, including those without specialized financial or legal knowledge (17 CFR § 230.421).
 
-Following \cite{Golubov2019-ku, Stambaugh2016-eb}, I filter firms by considering only ordinary common shares, traded on NYSE, AMEX, and NASDAQ exchanges; and following \cite{Stambaugh2016-eb} I exclude those whose prices are less than \$5 in 2016 dollars. 
+Reporting risk factors is mandatory for most firms; however, there are exceptions for asset-backed issuers and smaller reporting companies. Asset-backed issuers are defined as issuers whose reporting obligation arises from either the registration of an offering of asset-backed securities under the Securities Act or the registration of a class of asset-backed securities. 
 
-Reporting risk factors is mandatory for most firms; however, there are exceptions for asset-backed issuers and smaller reporting companies. Asset-backed issuers are defined as issuers whose reporting obligation arises from either the registration of an offering of asset-backed securities under the Securities Act or the registration of a class of asset-backed securities. Firms that are not required to disclose risk factors either leave Item 1A empty or write a placeholder text specifying that, due to their nature, they are not required to disclose risk factors. Consequently, there is an abnormal frequency of 10-K filings with a significantly low number of words, as depicted in Figure \ref{fig:cdf}. In subsequent stages, 1A texts with an insufficient word count are discarded. The threshold adopted was 200 words. The total count of filtered firms by year is shown in Table \ref{tab:file_counts}.
+\subsubsection{Filtering 10-K reports}
+\label{sec:filt10k}
+Following \cite{Golubov2019-ku, Stambaugh2016-eb}, I filter firms by considering only ordinary common shares (CRSP share codes 10 and 11), traded on NYSE, AMEX, and NASDAQ exchanges (CRSP exchange codes 1, 2, and 3). Additionally, I exclude firms whose prices are less than \$5 in 2016 dollars, to avoid micro-structure effects. 
+
+Furthermore, non-reporting firms must also be filtered out. Firms that are not required to disclose risk factors either leave Item 1A empty or write a distinctively short placeholder text specifying that, due to their nature, they are not required to disclose risk factors. Consequently, there is an abnormal frequency of 10-K filings with a significantly low number of words, as depicted in Figure \ref{fig:cdf}. In subsequent stages, 1A texts with an insufficient word count are discarded. The threshold adopted was 200 words. 
+
+The total count of filtered firms by year is shown in Table \ref{tab:file_counts}. A total of 40,174 firm-year combinations are represented in the final topic map.
 
 The next step is to convert each text in the corpus to a bag-of-words format, detailed in Appendix A.
 
-% TODO Need to change: use min10kwords = 200
+\begin{table}[!htbp] \centering 
+  \caption{File Counts by Year} 
+  \label{tab:file_counts} 
+\begin{tabular}{@{\extracolsep{5pt}} D{.}{.}{-3} D{.}{.}{-3} D{.}{.}{-3} } 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\multicolumn{1}{c}{Year} & \multicolumn{1}{c}{Total\_1As} & \multicolumn{1}{c}{Filtered} \\ 
+\hline \\[-1.8ex] 
+\multicolumn{1}{c}{2006} & \multicolumn{1}{c}{5685} & \multicolumn{1}{c}{2466} \\ 
+\multicolumn{1}{c}{2007} & \multicolumn{1}{c}{6445} & \multicolumn{1}{c}{2714} \\ 
+\multicolumn{1}{c}{2008} & \multicolumn{1}{c}{6931} & \multicolumn{1}{c}{2305} \\ 
+\multicolumn{1}{c}{2009} & \multicolumn{1}{c}{8244} & \multicolumn{1}{c}{2190} \\ 
+\multicolumn{1}{c}{2010} & \multicolumn{1}{c}{8122} & \multicolumn{1}{c}{2290} \\ 
+\multicolumn{1}{c}{2011} & \multicolumn{1}{c}{8019} & \multicolumn{1}{c}{2356} \\ 
+\multicolumn{1}{c}{2012} & \multicolumn{1}{c}{7797} & \multicolumn{1}{c}{2316} \\ 
+\multicolumn{1}{c}{2013} & \multicolumn{1}{c}{7560} & \multicolumn{1}{c}{2401} \\ 
+\multicolumn{1}{c}{2014} & \multicolumn{1}{c}{7560} & \multicolumn{1}{c}{2518} \\ 
+\multicolumn{1}{c}{2015} & \multicolumn{1}{c}{7531} & \multicolumn{1}{c}{2528} \\ 
+\multicolumn{1}{c}{2016} & \multicolumn{1}{c}{7196} & \multicolumn{1}{c}{2431} \\ 
+\multicolumn{1}{c}{2017} & \multicolumn{1}{c}{6896} & \multicolumn{1}{c}{2394} \\ 
+\multicolumn{1}{c}{2018} & \multicolumn{1}{c}{6804} & \multicolumn{1}{c}{2418} \\ 
+\multicolumn{1}{c}{2019} & \multicolumn{1}{c}{6683} & \multicolumn{1}{c}{2404} \\ 
+\multicolumn{1}{c}{2020} & \multicolumn{1}{c}{6531} & \multicolumn{1}{c}{2332} \\ 
+\multicolumn{1}{c}{2021} & \multicolumn{1}{c}{6936} & \multicolumn{1}{c}{2308} \\ 
+\multicolumn{1}{c}{2022} & \multicolumn{1}{c}{6899} & \multicolumn{1}{c}{1885} \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+
+\subsection{Firm-level data}
+
+Firm-level data is retrieved from CRSP-Compustat's Fundamentals Annual database.
+
+\subsection{Intangible and knowledge capital data}
+
+The data on intangible and knowledge capital is sourced from WRDS, based on the measurement methodology outlined by \cite{Peters2017-fl}, which employs the perpetual inventory method on firms' expenses on SG\&A (selling, general, and administrative expenses). Intangible capital is defined as the estimated replacement cost of a firm's intangible assets. Knowledge capital, a subset of intangible capital, specifically represents the replacement cost of the firm's knowledge assets derived from research and development activities, as reported under R\&D in their balance sheets.
+
+\subsection{Stock returns data}
+
+Stock return data is sourced from the Center for Research in Security Prices (CRSP). As outlined in Section \ref{sec:filt10k}, stocks priced below \$5, as measured by their June average in each year, are excluded from the analysis. To adjust for price changes over time, the Consumer Price Index for All Urban Consumers (CPI-U), obtained from the Federal Reserve Economic Data (FRED) database, is employed for inflation adjustment. Stock return data is retrieved in multiple frequencies (daily, weekly, monthly). 
+
+Fama-French factors such as SMB and HML; risk-free rates (one-month Treasury bill rate, obtained from Ibbotson Associates); and excess market returns are retrieved from Kenneth French's website.
 
 
-\input{\ffo/file_counts.tex} 
+\subsection{Patent data}
+
+The economic value of each patent filed by individual firms is obtained from the dataset available on Dimitris Papanikolaou's website, according to the methodology described in \cite{Kogan2017-fx}. This value represents the private economic value of each patent, calculated based on the firm's current market capitalization and the idiosyncratic return of the firm's stock around the time of the patent's issuance. This calculation takes into account the need to exclude market-wide movements and potential measurement errors to isolate the specific impact of the patent issuance on the firm's value.
+
+Patent values are accumulated on an annual basis to construct a metric representing the total added patent value for each firm in each respective year. Missing data for added patent value are substituted by 0. Patent values are deflated to 1982 (million) dollars using the CPI.
+
+\subsection{Other data}
+
+Industry-specific labor skill data is sourced from Frederico Belo's website, following the definition provided by \cite{Belo2017-qi}. In their study, the skill level within an industry is quantified as the proportion of employees engaged in occupations necessitating extensive training and preparation, defined as occupations with a Specific Vocational Preparation (SVP) level of 7 or higher. Industries are categorized using 4-digit NAICS codes. For the years post-2013, the established labor skill level as of 2013 is applied.
+
+Databases indexed with different keys (such as CRSP, PERMNO, or GVKEY) were merged using the CRSP-Compustat Merged Database link table.
 
 
-%Through this approach, I have observed a positive correlation between higher intensities of a specific topic, hereafter referred to as "$Topic_{kk}$", and the aforementioned measures. This suggests that firms that more frequently discuss this topic may have higher levels of knowledge capital, accumulated patent value, and industry skill.
-%
-%Furthermore, I have found that firms in the upper quartile of "$Topic_{kk}$" intensity have consistently outperformed their peers in terms of returns since 2006. This finding indicates a potential link between the subject matter discussed in firms' annual reports and their financial performance.x
+\begin{landscape}
+\begin{table}[!htbp] \centering 
+  \caption{Descriptive Statistics} 
+  \label{tab:descstat} 
+\begin{tabular}{@{\extracolsep{5pt}} m{9cm}cccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & Mean & Median & St. dev. & Min & Max & n \\ 
+\hline \\[-1.8ex] 
+topic\_kk & $0.10$ & $0$ & $0.25$ & $0$ & $1$ & $40,173$ \\ 
+topic\_finl & $0.24$ & $0.05$ & $0.36$ & $0$ & $1$ & $40,173$ \\ 
+topic\_sw & $0.29$ & $0.14$ & $0.34$ & $0$ & $1$ & $40,173$ \\ 
+topic\_rawm & $0.36$ & $0.20$ & $0.37$ & $0$ & $1$ & $40,173$ \\ 
+Skill & $0.33$ & $0.29$ & $0.18$ & $0.01$ & $0.76$ & $38,922$ \\ 
+Annual patent value added & $226$ & $0$ & $2,048$ & $0$ & $87,430$ & $40,173$ \\ 
+Total patent value accumulated (millions) & $6,905$ & $0$ & $49,944$ & $0$ & $1,162,766$ & $40,173$ \\ 
+Total patent value / total assets & $0.38$ & $0$ & $1.70$ & $0$ & $116$ & $40,173$ \\ 
+Annual patent value / total assets & $0.02$ & $0$ & $0.13$ & $0$ & $8.45$ & $40,173$ \\ 
+Intangible capital (millions) & $2,656$ & $329$ & $11,253$ & $0$ & $278,772$ & $27,462$ \\ 
+Knowledge capital (millions) & $427$ & $0$ & $3,012$ & $0$ & $78,910$ & $27,462$ \\ 
+Total assets (millions) & $12,193$ & $1,342$ & $79,957$ & $0.42$ & $3,386,070$ & $34,485$ \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
 
-%TODO Create in R a function that receives one of the key df's 
-
-%TODO Create in r a funciton that returns: for a given year; distr per topic; average K_int/K_int_Know per topic; average patent expenditure; average/std size  
-
-% TODO: How many 1As per year? How many public firms in Compustat?
-
-
+\end{landscape}
 
 \section{Measuring knowledge capital risk at the firm level}
 
@@ -167,22 +244,16 @@ This paper introduces a novel measure for evaluating firm-level risks associated
 
 In this paper, knowledge capital risk is defined as the unique form of risk that innovation-centric firms bear, particularly when their cash flow trajectories are influenced by the stochastic nature of research-induced innovations. This risk is inherent in the unpredictable timing and impact of such innovations on a firm's financial performance.
 
-An example of volatility caused by R\&D investments in a firm is shown in Figure \ref{fig:amazon_nov01} 
-
-\insertfigure{amazon_nov01}{Text}{0.8}
-
 Methodologies for pattern detection in textual analysis encompass a range of techniques from simple pattern matching to more complex algorithmic constructions of term sets, as well as the identification of prevailing topics within textual data.
-
-The concept of knowledge capital risk, however, lacks an empirical "ground truth," a benchmark against which the accuracy of predictions or classifications can be validated, such as the VIX in \cite{Manela2017-lj}, used as ground truth to create a measure of news volatility dating back to 1890. Moreover, the construction of a comprehensive dictionary is complex, as the terminology can vary significantly across industries. For instance, the lexicon indicative of intellectual property concerns in pharmaceutical companies may frequently reference terms such as "clinical trials" or "regulatory compliance" within their annual reports.
 
 In light of these complexities, my approach will leverage Latent Dirichlet Allocation (LDA) to analyze the risk factor sections within firms' 10-K filings. This method will facilitate the extraction of dominant topics that are most indicative of knowledge capital risk. 
 
-\subsection{Latent Dirichlet Allocation (LDA)}
+\subsection{Latent Dirichlet Allocation}
 
-In this study, I use Latent Dirichlet Allocation (LDA), a topic modeling technique, to identify latent topics within firms' self-reported risk factors in a comprehensive corpus of 121,839 firm annual reports (10-Ks), covering a timespan from 2006 to 2022.
+In this study, I use LDA, a topic modeling technique, to identify latent topics within firms' self-reported risk factors in a comprehensive corpus of 121,839 firm annual reports (10-Ks), covering a timespan from 2006 to 2022.
 
 
-Latent Dirichlet Allocation (LDA) is a generative statistical model that is widely employed for topic modelling within the field of natural language processing (NLP). LDA relies on the assumption that each document in a given corpus can be seen as a mixture of a certain number of latent topics, denoted as $k \in {1, ..., K}$, each of which carries a particular weight, $\omega_{i1}, ..., \omega_{iK}$. Each of these topics is assigned a word probability vector, $\mathbf{\theta}_k$, defining the likelihood of each word appearing under this topic \citep{Blei2003-ay}.
+LDA is a generative statistical model that is widely employed for topic modelling within the field of natural language processing (NLP). LDA relies on the assumption that each document in a given corpus can be seen as a mixture of a certain number of latent topics, denoted as $k \in {1, ..., K}$, each of which carries a particular weight, $\omega_{i1}, ..., \omega_{iK}$. Each of these topics is assigned a word probability vector, $\mathbf{\theta}_k$, defining the likelihood of each word appearing under this topic \citep{Blei2003-ay}.
 
 Under this model, if we denote $X_i$ as the vector of word counts with length $n_i$ in the $i$th document, the word distribution in a document is modeled as a multinomial distribution. The probability of $X_i$ can be written as:
 
@@ -211,18 +282,9 @@ After merging a four-topic map between firms and topic intensities to firms' ide
 \input{\ffo/sample_map.tex}
 \normalsize
 
-%\caption{The left column shows the count of all 10-Ks retrieved for a given year. The right column counts all the 10-Ks that obey to the following filtering criteria: 1) Ordinary common shares; 2) Membership to NYSE, AMEX, and NASDAQ; 3) Price above \$ 5 in 2006 dollars; 4) Meaningful 10-K contents ($>$ 200 words)} 
-
-
-% TODO: Find out: what min_count to use? Does this actually make a large differnece? 
-
-% TODO Need to change:\texttt{} re-run processes with \n detection
-
-% TODO Need to change: re-run processes starting in 2005
-
-% TODO Need to change: use default instead of npmi; min_count = 5; threshold = 10
-
 \section{Comparison to existing measures}
+
+The concept of knowledge capital risk lacks an empirical "ground truth," a benchmark against which the accuracy of predictions or classifications can be validated, such as the VIX in \cite{Manela2017-lj}, used as ground truth to create a measure of news volatility dating back to 1890. Moreover, the construction of a comprehensive dictionary is complex, as the terminology can vary significantly across industries. For instance, the lexicon indicative of intellectual property concerns in pharmaceutical companies may frequently reference terms such as "clinical trials" or "regulatory compliance" within their annual reports.
 
 In this section, I validate our text-based metric, $Topic_{kk}$, by cross-referencing it with established measures from prior literature. This assessment strengthens the reliability and relevance of our metric within the broader context of knowledge capital analysis.
 
@@ -268,7 +330,6 @@ In this section, the text-based measure \tkk  is cross-examined with other poten
 
 \begin{table}[!htbp]  
   \label{fig:bytech} 
-  \scriptsize 
 \begin{tabular}{@{\extracolsep{0pt}} D{.}{.}{3} D{.}{.}{-3} D{.}{.}{-3} } 
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
@@ -281,20 +342,6 @@ In this section, the text-based measure \tkk  is cross-examined with other poten
 \hline \\[-1.8ex] 
 \end{tabular} 
 \end{table} 
-
-Figure \ref{fig:heatmap} presents a correlation matrix that delineates the relationship between the intensity of each topic and the average skill level of employees within a narrowly-defined industry, in accordance with the definition given by Belo et al. (2017). These authors define 'Skill' as the proportion of industry workers engaged in occupations that demand a high degree of training and preparation.
-
-The determination of whether an occupation is high-skill is informed by the Specific Vocational Preparation (SVP) level for each occupation. This data is sourced from the 1991 edition of the Dictionary of Occupational Titles (DOT), published by the U.S. Department of Labor. 
-
-In Belo et al.'s (2017) classification, an occupation is considered high-skill if it possesses an SVP level of 7 or greater. This level implies a requirement of two or more years of preparation. Occupations failing to meet this threshold are classified as low-skill.
-
-\insertfigure{heatmap}{Correlation Matrix Showcasing the Relationship between Topic Intensity and Industry Employee Skill Level}{0.7}
-
-The second component of the analysis, shown in Figure \ref{fig:firmsbypat_hm}, computes the co-occurrences of quartiles for $Topic_{kk}$ and the accumulated patent-related market value within firms, in alignment with the methodology proposed by \cite{Kogan2017-fx}. \cite{Kogan2017-fx} leveraged stock market data to estimate the value of individual patents filed by public corporations since 1926. 
-
- In Figure \ref{fig:firmsbypat_hm}, the vertical axis signifies annually assigned quartiles of the ratio between Accumulated Patent Value and Total Assets. The results imply a clear correlation between elevated accumulated patent value and increased loadings of $Topic_{kk}$. A basic correlation analysis between average patent intensity and different topics is shown in Figure \ref{fig:heatmap_patents}.
-
-\insertfigure{heatmap_patents}{Quartiles of \tkk vs. quartiles of accumulated total patent market value}{0.7}
 
 Figure \ref{fig:topicvskkpt_hm} demonstrates the correlation between $Topic_{kk}$ and knowledge capital, as per the definition provided by Peters and Taylor (2017). Notably, it appears that higher accumulated investments in R\&D correspond to increased loadings of $Topic_{kk}$. 
 
@@ -391,7 +438,11 @@ Another area of interest is testing whether the derived topics can serve as fact
 
 \bibliography{mylibrary2}
 
-\section*{Appendix A: Text conversion to bag-of-words}
+\section*{Appendix A: Extracting risk factors' data}
+10-K documents are retrieved from EDGAR as HTML files.
+I extract the item 1A information from each 10-K using HTML parsing and \texttt{BeautifulSoup}, and remove punctuation and numbers.
+
+\section*{Appendix B: Text conversion to bag-of-words}
 \label{bow}
 
 After filtering the firms, I employ the \texttt{spacy} Python library to conduct lemmatization on all the refined texts. Lemmatization transforms words into their base form, ensuring consistent semantics. As an illustration, words such as ``take'', ``took'', and ``taken'' are standardized to ``take''. To do so, \texttt{spacy} leverages WordNet---a comprehensive English lexical database curated by Princeton University.
@@ -422,5 +473,20 @@ Lastly, the texts are transformed into a bag-of-words model using both the dicti
 \end{figure}
 
 
+\section*{Appendix C: Correlation of topic loadings with previous measures of knowledge capital intensity from the literature}
+
+Figure \ref{fig:heatmap} presents a correlation matrix that delineates the relationship between the intensity of each topic and the average skill level of employees within a narrowly-defined industry, in accordance with the definition given by Belo et al. (2017). These authors define 'Skill' as the proportion of industry workers engaged in occupations that demand a high degree of training and preparation.
+
+The determination of whether an occupation is high-skill is informed by the Specific Vocational Preparation (SVP) level for each occupation. This data is sourced from the 1991 edition of the Dictionary of Occupational Titles (DOT), published by the U.S. Department of Labor. 
+
+In Belo et al.'s (2017) classification, an occupation is considered high-skill if it possesses an SVP level of 7 or greater. This level implies a requirement of two or more years of preparation. Occupations failing to meet this threshold are classified as low-skill.
+
+\insertfigure{heatmap}{Correlation Matrix Showcasing the Relationship between Topic Intensity and Industry Employee Skill Level}{0.7}
+
+The second component of the analysis, shown in Figure \ref{fig:firmsbypat_hm}, computes the co-occurrences of quartiles for $Topic_{kk}$ and the accumulated patent-related market value within firms, in alignment with the methodology proposed by \cite{Kogan2017-fx}. \cite{Kogan2017-fx} leveraged stock market data to estimate the value of individual patents filed by public corporations since 1926. 
+
+ In Figure \ref{fig:firmsbypat_hm}, the vertical axis signifies annually assigned quartiles of the ratio between Accumulated Patent Value and Total Assets. The results imply a clear correlation between elevated accumulated patent value and increased loadings of $Topic_{kk}$. A basic correlation analysis between average patent intensity and different topics is shown in Figure \ref{fig:heatmap_patents}.
+
+\insertfigure{heatmap_patents}{Quartiles of \tkk vs. quartiles of accumulated total patent market value}{0.7}
 
 \end{document} 

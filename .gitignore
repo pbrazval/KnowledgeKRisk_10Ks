@@ -2,3 +2,7 @@
 *.csv
 *.Rdata
 src/st1_downloading10ks_loop.ipynb
+src/old/
+src/envkkr/
+data/
+text/

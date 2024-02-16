@@ -11,13 +11,19 @@ library(lubridate)
 library(broom)
 library(nlme)
 library(moments)
+library(psych)
+library(zeallot)
 source("utilities_R.R")
+setwd("~/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/src")
+start_time <- Sys.time()
+# Disable linter warnings:
+# nolint start
 
 ## Basic configurations -----------
-splitvar = "ntile_topic_kk"
-modelname = "dicfullmc10thr10defnob40noa1_4t"
+modelname = "dicfullmc10thr10defnob40noa0_8_4t"
+quantiles = 4
 dir.create(file.path("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname), showWarnings = FALSE)
-figfolder = paste0("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname, "/")
+figfolder = paste0("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/text/", modelname, "/") # nolint # nolint
 print_kurtosis = FALSE
 
 ## Loading all csvs -----------
@@ -39,304 +45,45 @@ load("/Users/pedrovallocci/Documents/PhD (local)/Research/Github/KnowledgeKRisk_
 load("/Users/pedrovallocci/Documents/PhD (local)/Research/By Topic/Measuring knowledge capital risk/input/stoxda_post2005veryshort.Rdata")
 comparison_measures <- read.csv("~/Documents/PhD (local)/Research/Github/KnowledgeKRisk_10Ks/data/comparison_measures.csv")
 stoxda_orig = stoxwe_post2005short
-
-## Defining source of stocks information -----------
-stoxmo_orig = stoxmo_post2000short
-
-## Recreating equity mapper. May be commented for speed
-cequity_mapper = redo_equity_mapper(comp_funda2, figfolder)
-
-## Creating Amazon graph for motivation
-amazon_graph(amazon_nov01_short, figfolder)
-
-## Create filecounts.tex
-filecounter(figfolder)
-
-## Create Stargazer comparison of measures
-stargaze_comparison(comparison_measures, figfolder)
+stoxmo_orig = stoxmo_post2000short ## Defining source of stocks information
+#cequity_mapper = redo_equity_mapper(comp_funda2, figfolder) ## Recreating equity mapper. May be commented for speed
 
 ## Cleaning dataframes --------
 print("Cleaning dataframes.")
+linkt = clean_linkt_orig(linkt_orig)
+end_time <- Sys.time()
+print(paste("Execution time: ", end_time-start_time))
 
-linkt = linkt_orig %>%
-  group_by(gvkey) %>%
-  fill(LPERMNO, .direction = "downup") %>%
-  ungroup() %>%
-  mutate(CUSIP8 = substr(cusip, 1, 8)) %>%
-  select(CUSIP8, LPERMNO, sic, cik, gvkey, conm, naics) %>%
-  mutate(naics4 = substr(as.character(naics), 1, 4)) %>%
-  select(-naics) %>%
-  group_modify(~create_ind12(.x)) %>%
-  group_modify(~add_hi_tech_column(.x)) %>%
-  distinct() %>%
-  drop_na(LPERMNO, cik) %>%
-  arrange(LPERMNO, cik) %>%
-  group_by(LPERMNO) %>%
-  slice(1) %>%
-  ungroup()
-  
-
-patent_ik <- patent_ik_orig %>%
-  left_join(linkt, by = c("permno" = "LPERMNO")) %>%
-  mutate(year = as.numeric(substr(filing_date,7,10)) ) %>%
-  mutate(xi_real = coalesce(xi_real, 0)) %>%
-  group_by(gvkey, year) %>%
-  summarize(xi_yeartotal = sum(xi_real)) %>%
-  ungroup() %>%
-  group_by(gvkey) %>%
-  mutate(xi_cumsum = cumsum(xi_yeartotal)) %>%
-  ungroup()  
-
-ff3fm <- ff3fm_orig %>%
-  cleanff() %>%
-  drop_na()
-
-ff5fm <- ff5fm_orig %>%
-  cleanff() %>%
-  drop_na()
-
-ff3fw <- ff3fw_orig %>%
-  cleanffw() %>%
-  drop_na()
-
-ff5fw <- ff5fw_orig %>%
-  cleanffw() %>%
-  group_by(yw) %>%
-  summarize(across(.cols = everything(), sum)) %>%
-  ungroup()
-
-expandgrid = expand.grid(YEAR = 2014:2022, naics4 = unique(skilldata_orig %>% filter(YEAR == 2013) %>% pull(ind))) %>%
-  rename(year = YEAR) 
-
-skilldata <- skilldata_orig %>%
-  rename(naics4 = ind) %>%
-  rename(year = YEAR) %>%
-  full_join(expandgrid, by = c("naics4", "year")) %>%
-  arrange(year, naics4) %>%
-  group_by(naics4) %>%
-  fill("Skill", .direction = "down") %>%
-  ungroup()
-
-## Creating topic_map --------
-compustat_pt = comp_funda2 %>%
-  mutate(gvkey = as.integer(GVKEY)) %>%
-  left_join(peterstaylor, by = c("fyear", "gvkey"))  %>%
-  rename(year = fyear) %>%
-  select(K_int_Know, K_int, at, gvkey, year, prcc_f, prcc_c, ppegt, csho, ceq, cusip, exchg)
+patent_ik = clean_patent_ik_orig(patent_ik_orig, linkt)
+c(ff3fm, ff5fm, ff3fw, ff5fw) %<-% cleanff_all()
+skilldata = clean_skilldata(skilldata_orig)
+compustat_pt = clean_compustat(comp_funda2, peterstaylor)
 
 # CIKs are not unique -- they may map to multiple PERMNOs. May need to consolidate later.
-topic_map_unlabeled <- topic_map_orig %>%
-  left_join(linkt, by = c("CIK" = "cik"), relationship = "many-to-many") %>%
-  mutate(naics4 = as.numeric(naics4)) %>%
-  left_join(skilldata, by = c("naics4", "year")) %>%
-  left_join(patent_ik, by = c("gvkey", "year")) %>%
-  arrange(year, gvkey) %>%
-  group_by(gvkey) %>%
-  fill(xi_cumsum, .direction = "down") %>%
-  ungroup() %>%
-  mutate(xi_cumsum = ifelse(is.na(xi_cumsum),0, xi_cumsum)) %>%
-  mutate(xi_yeartotal = ifelse(is.na(xi_yeartotal), 0, xi_yeartotal)) %>%
-  left_join(compustat_pt, by = c("gvkey", "year")) %>%
-  mutate(xir_cumsum = ifelse(is.na(xi_cumsum/at), 0, xi_cumsum/at)) %>%
-  mutate(xir_total = ifelse(is.na(xi_yeartotal/at), 0, xi_yeartotal/at))  %>%
-  group_by(gvkey, year) %>%
-  fill(K_int_Know, K_int, at, Skill, .direction = "down") %>%
-  fill(K_int_Know, K_int, at, Skill, .direction = "up")  %>%
-  group_by(gvkey, year) %>%
-  slice(1) %>%
-  ungroup()
-
-k <- 0
-labels <- vector("list", 2)
-labels[[1]] <- paste("topic", k, sep = "_")
-labels[[2]] <- as.character(k)
-quantiles = 4
-
-topic_map_labeled = topic_map_unlabeled
-
-names(topic_map_labeled)[names(topic_map_labeled) == "topic_0"] <- "topic_kk"
-names(topic_map_labeled)[names(topic_map_labeled) == "topic_1"] <- "topic_finl"
-names(topic_map_labeled)[names(topic_map_labeled) == "topic_2"] <- "topic_sw"
-names(topic_map_labeled)[names(topic_map_labeled) == "topic_3"] <- "topic_rawm"
+topic_map_unlabeled = create_topic_map_unlabeled(topic_map_orig, linkt, skilldata, patent_ik, compustat_pt)
+topic_map_labeled = label_table_map(modelname)
 
 topic_map = understand_topics(topic_map_labeled, labels, quantiles, figfolder) 
- # %>%select(-K_int_Know, -K_int) #removed 2023'11'25
+c(eret_mo, stoxmo_with_pfs) %<-% create_eret_mo_panel_ff5(stoxmo_orig, cequity_mapper, topic_map, "pf36_name")
 
-stoxmo = stoxmo_orig %>%
-  mutate(date = ymd(date)) %>%
-  mutate(y = year(date)) %>%
-  mutate(ym = y*100 + month(date)) %>%
-  left_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y"), relationship = "many-to-many") %>%
-  filter(crit_ALL == 1) %>%
-  left_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year"), relationship = "many-to-many") 
+c(first_stage_rollwin_mo, second_stage_rollwin_mo) %<-% fama_macbeth(12*5, "pf36_name")
 
-stoxwe = stoxwe_orig %>%
-  mutate(y = yw %/% 100) %>%
-  inner_join(cequity_mapper, by = c("PERMNO" = "PERMNO", "y" = "y"), relationship = "many-to-many") %>%
-  filter(crit_ALL == 1) %>%
-  inner_join(topic_map, by = c("PERMNO" = "LPERMNO", "y" = "year"), relationship = "many-to-many") %>%
-  filter(y >= min(topic_map$year)) %>%
-  left_join(ff3fw, by = "yw") %>%
-  mutate(eretw = retw - RF) %>%
-  drop_na(retw) #%>%
-  # nest_by(PERMNO) %>%
-  # mutate(mod = list(lm(formula3ff <- eretw ~ Mkt.RF, data = data))) %>% 
-  # mutate(augmented = list(broom::augment(mod, data = data))) %>%
-  # select(-mod, -data) %>%
-  # unnest(augmented)
+c(eret_we, stoxwe_with_pfs) %<-% create_eret_we_panel_ff5(stoxwe_orig, cequity_mapper, topic_map, "pf36_name")
 
-if(print_kurtosis){
-  kurtosis_graph(stoxda_orig, cequity_mapper, topic_map)
-}
-
-# CLEANING COMP_FUNDA AND PETERSTAYLOR
-print("Creating stoxwe_with_pfs...")
-
-stoxwe_with_pfs = attributePortfolios(stoxwe)
-  
-pf_ret = stoxwe_with_pfs %>%
-  drop_na(eretw, me) %>%
-  group_by(yw, pf36_name) %>%
-  summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), Mkt.RF = mean(Mkt.RF), SMB = mean(SMB), HML = mean(HML), RF = mean(RF))
-
-kkhml_ret = stoxwe_with_pfs %>%
-  drop_na(topic_kk) %>%
-  ungroup() %>%
-  group_by(yw, ntile_topic_kk) %>%
-  summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE)) %>%
-  pivot_wider(names_from = ntile_topic_kk, names_prefix = "kk", values_from = eret) %>%
-  transmute(yw, kkhml = kk4-kk1)
-
-eret_we = pf_ret %>%
-  inner_join(kkhml_ret, by = c("yw")) %>%
-  rename(eretw = eret)  %>%
-  drop_na() %>%
-  ungroup()
-
-formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF
-
-first_stage1 = eret_we %>%
-  ungroup() %>%
-  nest_by(pf36_name) %>%
-  mutate(mod = list(lm(formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF, data = data))) %>%
-  summarize(eretw = mean(data$eretw), t = length(data$eretw), tidy(mod)) 
-
-get_sigmae = first_stage1 %>%
-  mutate(sigmae = t*std.error^2) %>%
-  filter(term == "(Intercept)") %>%
-  select(pf36_name, sigmae) %>%
-  drop_na()
-
-first_stage2 = first_stage1 %>%
-  select(-std.error, -statistic, -p.value) %>%
-  pivot_wider(names_from = term, values_from = estimate) %>%
-  full_join(get_sigmae, by = c("pf36_name")) %>%
-  drop_na()
-
-second_stage_ols = lm(formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF, data = first_stage2)
+c(eret_we, stoxwe_with_pfs) %<-% create_eret_we_panel(stoxwe_orig, cequity_mapper, topic_map, ff3fw, "pf36_name")
+first_stage2 = first_stage(eretw ~ kkrhml + HML + SMB + Mkt.RF, eret_we, "pf36_name")
+second_stage_ols = lm(formula3ff <- eretw ~ kkrhml + HML + SMB + Mkt.RF, data = first_stage2)
 second_stage_wls_nokk = lm(formula3ff <- eretw ~ HML + SMB + Mkt.RF, data = first_stage2, weights = first_stage2$sigmae)
-second_stage_wls = lm(formula3ff <- eretw ~ kkhml + HML + SMB + Mkt.RF, data = first_stage2, weights = first_stage2$sigmae)
-
-summary(second_stage_ols)
-summary(second_stage_wls)
+second_stage_wls = lm(formula3ff <- eretw ~ kkrhml + HML + SMB + Mkt.RF, data = first_stage2, weights = first_stage2$sigmae)
 
 latex_table <- stargazer(second_stage_wls, second_stage_wls_nokk, title = "Regression Summary", align = TRUE, out = paste0(figfolder, "summary_table.tex"), dep.var.labels = c("Average returns"))
 
-we_ret_bybin = stoxwe_with_pfs %>%
-  mutate(ntile_topic_kk = factor(ntile_topic_kk)) %>%
-  group_by(yw, ntile_topic_kk) %>%
-  summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), sderet = sd(eretw, na.rm = TRUE)) %>%
-  ungroup() %>%
-  group_by(ntile_topic_kk) %>%
-  mutate(eret_accum = cumsum(eret)) %>% 
-  yw2day()
+plot_returns()
+descriptive_statistics(topic_map, figfolder)
+amazon_graph(amazon_nov01_short, figfolder) ## Creating Amazon graph for motivation
+filecounter(figfolder)## Create filecounts.tex
+stargaze_comparison(comparison_measures, figfolder) ## Create Stargazer comparison of measures
 
-qt_ret_bygroup = we_ret_bybin %>%
-  group_by(ntile_topic_kk) %>%
-  mutate(eret3ma = rollmean(eret, k=13, fill=NA, align='right')) 
-
-ggplot(we_ret_bybin, aes(x = yw, y = eret, col = ntile_topic_kk)) +
-  geom_line() +
-  labs(x = "Year-month", y = "Asset-weighted weekly returns")+
-  theme(
-    legend.text = element_text(size = 14),  # Adjust legend font size
-    axis.text = element_text(size = 14)     # Adjust axis label font size
-  )
-ggsave(paste0(figfolder, "awwr.jpg"), plot = last_plot(), dpi = 600)
-
-ggplot(qt_ret_bygroup, aes(x = yw, y = eret3ma, col = ntile_topic_kk)) + geom_line()  +
-  labs(x = "Year-month", y = "Asset-weighted weekly returns, 3MA") +
-  theme(
-    legend.text = element_text(size = 14),  # Adjust legend font size
-    axis.text = element_text(size = 14)     # Adjust axis label font size
-  )
-ggsave(paste0(figfolder, "awwr3ma.jpg"), plot = last_plot(), dpi = 600)
-
-ggplot(we_ret_bybin , aes(x = yw, y = eret_accum, col = ntile_topic_kk)) +
-  geom_line() +
-  labs(x = "Year-month", y = "Asset-weighted accumulated weekly returns")+
-  theme(
-    legend.text = element_text(size = 14),  # Adjust legend font size
-    axis.text = element_text(size = 14)     # Adjust axis label font size
-  )
-ggsave(paste0(figfolder, "awawr.jpg"), plot = last_plot(), dpi = 600)
-we_ret_bybin_filt = we_ret_bybin %>% 
-  filter(ntile_topic_kk %in% c(1,4)) %>%
-  group_by(ntile_topic_kk) %>%
-  mutate(moving_average = (lag(sderet, order_by = yw) 
-                           + lag(sderet, order_by = yw, n = 2) + lag(sderet, order_by = yw, n = 3) 
-                           + sderet) / 4)
-
-ggplot(we_ret_bybin_filt, aes(x = yw, y = moving_average, col = ntile_topic_kk)) + geom_line() + labs(x = "Year-month", y = "Weekly standard deviation of returns by n-tile, four-week MA")+
-  theme(
-    legend.text = element_text(size = 14),  # Adjust legend font size
-    axis.text = element_text(size = 14)     # Adjust axis label font size
-  )
-ggsave(paste0(figfolder, "wsdr.jpg"), plot = last_plot(), dpi = 600)
-
-we_ret_bygroup = stoxwe_with_pfs %>%
-  mutate(max_topic = factor(max_topic)) %>%
-  group_by(yw, max_topic) %>%
-  summarize(eret = sum(eretw*me, na.rm = TRUE)/sum(me, na.rm = TRUE), sderet = sd(eretw, na.rm = TRUE)) %>%
-  ungroup() %>%
-  group_by(max_topic) %>%
-  mutate(eret_accum = cumsum(eret)) %>%
-  ungroup() %>%
-  yw2day()
-
-qt_ret_bygroup = we_ret_bygroup %>%
-  group_by(max_topic) %>%
-  mutate(eret3ma = rollmean(eret, k=13, fill=NA, align='right')) 
-
-ggplot(we_ret_bygroup, aes(x = yw, y = eret, col = max_topic)) +
-  geom_line() +
-  labs(x = "Year-month", y = "Asset-weighted weekly returns")+
-  theme(
-    legend.text = element_text(size = 14),  # Adjust legend font size
-    axis.text = element_text(size = 14)     # Adjust axis label font size
-  )
-ggsave(paste0(figfolder, "awwr_byg.jpg"), plot = last_plot(), dpi = 600)
-ggplot(qt_ret_bygroup, aes(x = yw, y = eret3ma, col = max_topic)) + geom_line()  +
-  labs(x = "Year-month", y = "Asset-weighted weekly returns, 3MA") +
-  theme(
-    legend.text = element_text(size = 14),  # Adjust legend font size
-    axis.text = element_text(size = 14)     # Adjust axis label font size
-  )
-ggsave(paste0(figfolder, "awwr3ma_byg.jpg"), plot = last_plot(), dpi = 600)
-ggplot(we_ret_bygroup, aes(x = yw, y = eret_accum, col = max_topic)) +
-  geom_line() +
-  labs(x = "Year-month", y = "Asset-weighted accumulated weekly returns")+
-  theme(
-    legend.text = element_text(size = 14),  # Adjust legend font size
-    axis.text = element_text(size = 14)     # Adjust axis label font size
-  )
-ggsave(paste0(figfolder, "awawr_byg.jpg"), plot = last_plot(), dpi = 600)
-ggplot(we_ret_bygroup , aes(x = yw, y = sderet, col = max_topic)) +
-  geom_line() +
-  labs(x = "Year-month", y = "(Non-asset-weighted) weekly standard deviation of returns")+
-  theme(
-    legend.text = element_text(size = 14),  # Adjust legend font size
-    axis.text = element_text(size = 14)     # Adjust axis label font size
-  )
-ggsave(paste0(figfolder, "wsdr_byg.jpg"), plot = last_plot(), dpi = 600)
-
+if(print_kurtosis){
+  plot_kurtosis(stoxda_orig, cequity_mapper, topic_map)
+}
